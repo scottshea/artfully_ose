@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Artfully Open Source Edition by fracturedatlas</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/fracturedatlas/artfully_ose">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Artfully Open Source Edition</h1>
+            <h2>Open-source application to run your arts organization</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/fracturedatlas/artfully_ose/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/fracturedatlas/artfully_ose/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <h1>Artfully Open Source Edition</h1>
+
+<p>An Open-source application to run your arts organization.  Features include:</p>
+
+<ul>
+<li>Free and paid ticketing on the web</li>
+<li>Patron tracking</li>
+<li>Patron importing and exporting</li>
+<li>Order tracking</li>
+<li>Door lists</li>
+<li>Box office</li>
+</ul><p>And coming soon...</p>
+
+<ul>
+<li>Advanced patron searching</li>
+<li>Mailchimp integration</li>
+</ul><h1>About</h1>
+
+<p>Creating your own Artfully installation requires a basic understanding of Git, Heroku, Ruby and Rails.</p>
+
+<h1>Installation</h1>
+
+<p>These instructions outline getting a new app up and running on Heroku's amazing hosting platform.  Artfully is a typical Rails::Engine, so there's no reason it can't be imported into a typical Rails application and served on another platform.</p>
+
+<p>However, <em>Artfully is not a mountable engine</em> and <strong>is not designed to be imported into an existing Rails application with a mature codebase</strong>.  Artfully is intended to stand alone in a new Rails app with little modification.</p>
+
+<h2>Dependencies</h2>
+
+<p>You'll need the following apps/services to use Artfully</p>
+
+<ul>
+<li>Solr</li>
+<li>MySQL</li>
+<li>Braintree</li>
+<li>S3</li>
+</ul><h2>Prerequisites</h2>
+
+<p>Make sure you have the following installed on your system</p>
+
+<ul>
+<li><a href="http://www.ruby-lang.org">Ruby</a></li>
+<li><a href="http://docs.rubygems.org/read/chapter/3/">Rubygems</a></li>
+<li><a href="https://github.com/heroku/heroku/">Heroku cli</a></li>
+<li><a href="http://git-scm.com/">Git</a></li>
+</ul><h2>Create your app</h2>
+
+<pre><code>rails new my_theater_company
+cd my_theater_company
+</code></pre>
+
+<h2>Include Artfully</h2>
+
+<p>Add this to <code>Gemfile</code></p>
+
+<pre><code>gem 'artfully_ose'
+</code></pre>
+
+<h2>Running Locally</h2>
+
+<p>If you intend to do any custom development or testing, go ahead and set up Artfully locally on your machine.  If you have no interest in this, feel free to skip ahead to Deployment to Heroku</p>
+
+<h3>Configure your app</h3>
+
+<p>Include the fabulous foreman gem </p>
+
+<pre><code>gem install foreman
+</code></pre>
+
+<p>and the sunspot_solr gem to help with local development.  Add the following to <code>Gemfile</code></p>
+
+<pre><code>group :development do
+  gem 'sunspot_solr', '1.3.3'
+end
+</code></pre>
+
+<h3>Environment</h3>
+
+<p>Add this to <code>config/environment.rb</code>.  Replace placeholder values with your own if you elect not to set environment variables.</p>
+
+<pre><code>config.after_initialize do 
+  #Braintree config
+  config.braintree.merchant_id    = ENV['BRAINTREE_MERCHANT_ID']   || 'your_merchant_id'
+  config.braintree.public_key     = ENV['BRAINTREE_PUBLIC_KEY']    || 'your_public_key'
+  config.braintree.private_key    = ENV['BRAINTREE_PRIVATE_KEY']   || 'your_private_key'
+
+  #S3 Config
+  config.s3.bucket                = ENV['S3_BUCKET']               || 'your_bucket'
+  config.s3.access_key_id         = ENV['S3_ACCESS_KEY_ID']        || 'your_access_key_id'
+  config.s3.secret_access_key     = ENV['S3_SECRET_ACCESS_KEY']    || 'your_secret'
+
+  #d2s3 config 
+  D2S3::S3Config.load_config
+end
+</code></pre>
+
+<p>Artfully requires the following environment variables to be set if they aren't explicitly set in <code>config/environment.rb</code></p>
+
+<pre><code>BRAINTREE_MERCHANT_ID
+BRAINTREE_PUBLIC_KEY
+BRAINTREE_PRIVATE_KEY
+
+S3_BUCKET
+S3_ACCESS_KEY_ID
+S3_SECRET_ACCESS_KEY
+</code></pre>
+
+<h3>Database</h3>
+
+<p>Update database.yml to point to your mysql database</p>
+
+<p>Run the migrations</p>
+
+<pre><code>bundle exec rake db:migrate
+</code></pre>
+
+<h3>Create Procfile</h3>
+
+<p>Create a new file called <code>Procfile</code> and add the following</p>
+
+<pre><code>web: bundle exec rails server thin -p $PORT
+worker: bundle exec rake jobs:work
+solr: bundle exec rake sunspot:solr:run
+</code></pre>
+
+<p>Now you can start your app locally with</p>
+
+<pre><code>foreman start
+</code></pre>
+
+<h2>Deployment to Heroku</h2>
+
+<h3>About delayed_job</h3>
+
+<p>Artfully ships with <code>delayed_job</code> enabled.  If you do not have a Heroku worker turned on, you'll want ot disable delayed_jobs so that they run immediately.</p>
+
+<p>To disable <code>delayed_job</code>, add this to <code>config/environment.rb</code></p>
+
+<pre><code>Delayed::Worker.delay_jobs = false
+</code></pre>
+
+<h3>Push</h3>
+
+<p>Follow the <a href="https://devcenter.heroku.com/articles/creating-apps">Heroku instructions</a> for creating an app</p>
+
+<pre><code>git add .
+git commit -m "Initial commit"
+heroku apps:create myapp
+git remote add heroku git@heroku.com:myapp.git
+git push heroku master
+</code></pre>
+
+<h3>Setup the production database</h3>
+
+<pre><code>heroku run bundle exec rake db:migrate
+</code></pre>
+
+<h3>Set environment variables</h3>
+
+<p>If you didn't set environment variables in <code>config/environment.rb</code>, you'll need to set them on the heroku command line.  Run this command for each environment variable listed in "Environment"</p>
+
+<pre><code>heroku config:add BRAINTREE_MERCHANT_ID='...'
+</code></pre>
+
+<p>If you have a Google Analytics account, you can set the environment variables <code>GA_ACCOUNT</code> and <code>GA_DOMAIN</code> to enable Google Analytics in Artfully.</p>
+
+<h3>Create your first user</h3>
+
+<p>This user will be the organization administrator.  In a Heroku console, run</p>
+
+<pre><code>User.create!({:email =&gt; "youradmin@example.com", :password =&gt; "your_strong_password", :password_confirmation =&gt; "your_strong_password" })
+</code></pre>
+
+<h3>Restart the app</h3>
+
+<pre><code>heroku restart
+</code></pre>
+
+<h3>Load your application</h3>
+
+<p>Go to <code>http://myapp.herokuapp.com</code> in a web browser</p>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/fracturedatlas">fracturedatlas</a> can be found on <a href="https://github.com/fracturedatlas/artfully_ose">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
