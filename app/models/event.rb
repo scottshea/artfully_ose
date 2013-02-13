@@ -1,10 +1,16 @@
 class Event < ActiveRecord::Base
   include Ext::Integrations::Event
+  include Ext::Resellable::Event
+  include Ext::Uuid
+  include Ticket::Reporting
   include EventPresenter
   require 'email_validator'
+
+  CATEGORIES = ["Dance", "Film & Electronic Media", "Literary Arts", "Music", "Theater", "Visual Arts", "Other"]
   
   attr_accessible :name, :producer, :description, :contact_email, :contact_phone, :image, :venue_attributes,
-                  :show_special_instructions, :special_instructions_caption
+                  :show_special_instructions, :special_instructions_caption, :public, :primary_category,
+                  :secondary_categories, :primary_category_other, :secondary_category_other
   
   belongs_to :organization
   belongs_to :venue
@@ -34,14 +40,15 @@ class Event < ActiveRecord::Base
   validates_attachment_size :image, :less_than => 1.megabytes, :unless => Proc.new {|model| model.image }
   validates_attachment_content_type :image, :content_type => ["image/jpeg", "image/gif", "image/png"]
 
+  before_create :set_primary_category
   after_create :create_default_chart
+
+  serialize :secondary_categories, Array
 
   default_scope where(:deleted_at => nil).order("events.created_at DESC")
   scope :published, includes(:shows).where(:shows => { :state => "published" })
 
   delegate :time_zone, :to => :venue
-
-  include Ticket::Reporting
 
   def free?
     is_free?
@@ -70,6 +77,10 @@ class Event < ActiveRecord::Base
 
   def filter_charts(charts)
     charts.reject { |chart| already_has_chart(chart) }
+  end
+
+  def set_primary_category
+    self.primary_category ||= "Other"
   end
   
   def create_default_chart
@@ -111,7 +122,7 @@ class Event < ActiveRecord::Base
   end
 
   def as_widget_json(options = {})
-    as_json(options.merge(:methods => ['shows', 'charts', 'venue'])).merge('performances' => upcoming_public_shows.as_json)
+    as_json(options.merge(:methods => ['shows', 'charts', 'venue', 'uuid'])).merge('performances' => upcoming_public_shows.as_json)
   end
 
   def as_full_calendar_json

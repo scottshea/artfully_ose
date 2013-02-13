@@ -3,6 +3,7 @@ class Show < ActiveRecord::Base
   include Ticket::Reporting
   include ActiveRecord::Transitions
   include Ext::Resellable::Show
+  include Ext::Uuid
 
   attr_accessible :datetime, :event_id, :chart_id, :organization_id, :old_mongo_id
   
@@ -125,6 +126,7 @@ class Show < ActiveRecord::Base
 
   def as_json(options={})
     { "id" => id,
+      "uuid" => uuid,
       "chart_id" => chart.id,
       "state" => state,
       "show_time" => show_time,

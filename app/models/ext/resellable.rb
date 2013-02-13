@@ -1,11 +1,12 @@
 module Ext
   module Resellable
     module Show    
-
     end
     
     module Organization
+    end
     
+    module Event    
     end
     
     module Ticket

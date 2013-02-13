@@ -20,6 +20,11 @@ describe Event do
   #   subject.venue = nil
   #   subject.should_not be_valid
   # end
+
+  it "should set the primary category when created" do
+    subject.save
+    subject.primary_category.should == "Other"
+  end
   
   it "should create a chart when the event is created" do
     subject.save
