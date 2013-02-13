@@ -1,0 +1,31 @@
+.row-fluid
+  %h2.span2 Users
+  .span10
+    - if can? :manage, current_user.current_organization
+      = link_to "Add", "#userForm", 'data-toggle' => 'modal', :class => 'btn'
+%ul#memberships.detailed-list.row-fluid
+  - organization.users.each do |user|
+    %li.span5.row-fluid
+      .span3
+        = gravatar_image_tag(user.email, :alt => 'User icon', :class => 'user-grav bordered', :gravatar => { :size => 48 })
+      .span9
+        .email= truncate(user.email)
+        .remove
+          - if user == current_user.current_organization.owner
+            Organization Administrator
+          - elsif can? :manage, current_user.current_organization
+            = link_to "Remove", organization_membership_path(@organization, user.membership_in(organization)), :method => :delete
+
+#userForm.modal
+  = form_tag organization_memberships_path(@organization.id), :action => "create" do
+    .modal-header
+      .close{'data-dismiss'=>'modal'} x
+      %h3 Add A User To Your Organization
+    .modal-body
+      %p
+        Enter the user's email address below.  The user will receive an email with a link to join Artful.ly and set his or her password.
+      = text_field_tag :user_email, "", :placeholder => "Enter an email address..."
+    .modal-footer
+      = submit_tag "Add", :class => 'btn'
+      
+    

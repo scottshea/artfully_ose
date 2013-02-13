@@ -1,0 +1,129 @@
+- content_for :custom_js do
+  = javascript_include_tag "box-office"
+- in_section :events
+- content_for :header do
+  %h1 Box Office
+
+= form_tag event_show_sales_path, :remote => true, :class => 'box-office-form' do
+  = hidden_field_tag :commit, ""
+  #showtime-total-and-checkout.row-fluid
+    .row-fluid.span8
+      #event-image.span2
+        = render :partial => 'shared/event_image_icon', :locals => { :event => @event }
+      #showtime.span4
+        %strong="#{@event.name}"
+        %br
+        ="#{l(@show.datetime_local_to_event, :format => :long_with_day)}"
+        %br
+        =icon_link_to("Return to show", event_show_path(@show.event, @show), 'icon-share-alt', 'btn', '')
+    #total-and-checkout.span4{:style => 'text-align:right' }
+      .row-fluid
+        .span6
+          #total.total
+            .price= number_as_cents 0
+        .span6
+          #checkout-now
+            %button.btn.btn-large.btn-success#checkout-now-button{:style => 'width:100%'}
+              Checkout
+  .row
+    .span4
+      %h6 Tickets
+      - @sale.sections.each do |section|
+        .row-fluid
+          .span9.section-description
+            .name= label_tag "quantities[#{section.id}]", "#{truncate(section.name, :length => 25)} #{number_as_cents(section.price)}"
+            .description{:id => "remaining_#{section.id}"}="#{@tickets_remaining[section.id]} remaining"
+          .span3
+            = select_tag "quantities[#{section.id}]", options_for_select(0..20, @sale.quantities[section.id]), :class => @tickets_remaining[section.id] > 0 ? 'ticket-quantity-select input-mini' : 'hidden ticket-quantity-select input-mini'
+            .sold-out{:id => "sold_out_#{section.id}", :class => @tickets_remaining[section.id] > 0 ? 'hidden' : ''}
+              %span.label.label-success
+                sold-out
+
+    .span4
+      %h6 Customer
+      .controls#the-details
+        = hidden_field_tag(:person_id, @dummy.id, :id => "person_id")
+        = text_field_tag(:search, params[:search], :id => "search", :placeholder => "First, last, or email...")
+        %p= link_to 'Create new person', '#new-person-popup', 'data-toggle' => 'modal', :id => 'new-person-link'
+        
+      .picked-person
+        .picked-person-name.picked-person-clear
+        .picked-person-email.picked-person-clear
+        .picked-person-company-name.picked-person-clear
+
+    .span4
+      %h6 Payment
+      #payment-controls.controls
+        %label.radio
+          = radio_button_tag(:payment_method, :cash, true, :class => 'payment-method', :disabled => 'true', :humanized_value => 'Cash')
+          Cash
+        %label.radio
+          = radio_button_tag(:payment_method, :comp, false, :class => 'payment-method', :disabled => 'true', :humanized_value => 'Comp')
+          Comp
+        -unless @event.is_free
+          %label.radio
+            = radio_button_tag(:payment_method, :credit_card_swipe, false, :class => 'payment-method', :disabled => 'true', :humanized_value => 'Credit card')
+            Credit (Swipe)
+          %label.radio
+            = radio_button_tag(:payment_method, :credit_card_manual, false, :class => 'payment-method', :disabled => 'true', :humanized_value => 'Credit card')
+            Credit (Manual)
+      #payment-info.hidden
+        .control-group
+          = label_tag("credit_card[cardholder_name]", "Name on Card")
+          .controls= text_field_tag("credit_card[name]", params[:credit_card][:cardholder_name])
+        .control-group
+          = label_tag("credit_card[card_number]", "Card Number")
+          .controls= text_field_tag("credit_card[number]", params[:credit_card][:card_number])
+        .control-group
+          = label_tag("credit_card[expiration_date]", "Expiration Date")
+          .date_field.controls
+            = select_tag("credit_card[month]", options_for_select(1..12, params[:credit_card]["month"]), :class => 'input-small inline')
+            = select_tag("credit_card[year]", options_for_select(Time.now.year..Time.now.year + 10, params[:credit_card]["year"]), :class => 'input-small inline')
+            
+
+#door-list
+  %h3 Door List
+  = render :partial => 'shared/door_list_table', :locals => { :door_list_items => @door_list.items}
+            
+= render "shared/new_person_popup"
+            
+#sell-popup.modal
+  .modal-header
+    %h2 Checkout
+  .modal-body
+    #sell-total.total.block
+      %h3 Total
+      %strong.price= number_as_cents 0
+      
+    .block
+      %h3 Buyer
+      .picked-person
+        #picket-person-name-in-popup.picked-person-name.picked-person-clear
+          No buyer information
+        .picked-person-email.picked-person-clear
+      
+    .block  
+      %h3 Payment Method
+      #payment-method-popup
+        Cash
+      
+    .block  
+      %h3 Tickets
+      #popup-ticket-list
+        %table.table
+          %thead
+            %tr
+              %th
+                Section
+              %th
+                Price
+          %tbody
+        
+  .modal-footer
+    %button#sell-button.btn.btn-large.btn-success{:name => 'commit', :label => 'true'}
+      Sell
+    %button#cancel-button.btn.btn-large
+      Cancel
+    %br  
+    %input#hack-cc-number.hidden{:name=>'hack-cc-number'}
+

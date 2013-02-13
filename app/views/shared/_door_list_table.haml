@@ -1,0 +1,24 @@
+#door-list-table
+  %table#door-list.table
+    %thead
+      %tr
+        %th
+        %th First
+        %th Last
+        %th Email
+        %th Section
+        %th Method
+        %th Price
+    %tbody
+      - door_list_items.each do |door_list_item|
+        %tr
+          %td= "☐"
+          %td= door_list_item.buyer.first_name
+          %td= door_list_item.buyer.last_name
+          %td= door_list_item.buyer.email
+          %td= door_list_item.ticket.section.name
+          %td= door_list_item.payment_method
+          %td= number_as_cents(door_list_item.ticket.sold_price)
+        %tr.no-border
+          %td
+          %td{:colspan => 6}= door_list_item.special_instructions

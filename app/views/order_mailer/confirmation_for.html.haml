@@ -1,0 +1,56 @@
+%h2 Order confirmation
+
+%p="Thank you for your order, #{@person.first_name} #{@person.last_name}!"
+
+- unless @order.tickets.empty?
+  %p="This is not a ticket. Please use your order number to check in at the event."
+
+%p
+  = "Order number: #{@order.id}"
+  %br
+  = "Purchase Date: #{l(@order.created_at_local_to_organization)}"
+  %br
+  = "Order total: $#{format("%.2f", (@order.total/100.0))}"
+  %br
+  = "Payment method: #{@order.payment_method}"
+  %br
+  = "Service fee: $#{format("%.2f", (@order.service_fee.to_i/100.0))}"
+  %br
+
+%p="==================="
+
+- unless @order.tickets.empty?
+  %h4 Tickets
+  - @order.ticket_summary.rows.each do |row|
+    %p
+      =row.show.event.name
+      %br
+      =l row.show.datetime_local_to_event
+      %br
+      -unless row.show.event.contact_email.blank?
+        ="Event contact email: #{row.show.event.contact_email}"
+        %br
+      -unless row.show.event.contact_phone.blank?
+        ="Event contact phone: #{row.show.event.contact_phone}"
+        %br
+      %br
+      ="#{row.show.event.venue.name}"
+      %br
+      -unless row.show.event.venue.street_as_string.blank?
+        ="#{row.show.event.venue.street_as_string}" 
+        %br
+      -unless row.show.event.venue.city_state_zip_as_string.blank?  
+        ="#{row.show.event.venue.city_state_zip_as_string}"
+        %br
+    %ul.ticket-list
+      - row.tickets.each do |ticket|
+        %li
+          %span.price= "#{ticket.section.name}: $#{format("%.2f", (ticket.price/100.0))}"
+
+- unless @order.donations.empty?
+  %h4 Donations
+  %ul.donation-list
+    - @order.donations.each do |item|
+      %li
+        %span.price= "$#{format("%.2f", (item.price/100.00))}:"
+        %span.name= "Donation to #{@order.organization.name_for_donations}"

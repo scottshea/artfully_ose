@@ -1,0 +1,14 @@
+.row-fluid
+  .span6
+    %h3="#{person.first_name} #{person.last_name}"
+    %h4=person.email
+  .span6
+    %table.table
+      %tr
+        %td Company
+        %td=person.company_name
+      %tr
+        %td Website
+        %td=person.website
+  .tag-list
+    = render :partial => 'shared/tags_uneditable', :locals => { :tag_list => person.tag_list }

@@ -1,0 +1,29 @@
+-# We can clean this up once played is a state (IG & GM)
+- if not show.played?
+  = form_tag built_event_shows_path(@event), :remote => true, :'data-type' => :json, :class => "sprited pending" do
+    = hidden_field_tag :show_id, show.id
+    = submit_tag "Create Tickets", :class => [ 'btn', 'btn-mini' ]
+
+  = form_tag on_sale_event_shows_path(@event), :remote => true, :'data-type' => :json, :class => "sprited built" do
+    = hidden_field_tag :show_id, show.id
+    = submit_tag "Put On Sale", :class => [ 'btn', 'btn-mini' ]
+    .confirmation.dialog
+      %p= "You are about to put all tickets for the #{l show.datetime_local_to_event} showing of #{show.event.name} on sale and make it public."
+
+  = form_tag unpublished_event_shows_path(show.event), :remote => true, :'data-type' => :json, :class => "sprited published", :id => "show_#{show.id}" do
+    = hidden_field_tag :show_id, show.id
+    = submit_tag "Unpublish", :class => [ 'btn', 'btn-mini' ]
+    .confirmation.dialog
+      %p= "You are unpublishing the #{l show.datetime_local_to_event} showing of #{show.event.name}."
+
+  = form_tag published_event_shows_path(show.event), :remote => true, :'data-type' => :json, :class => "sprited built unpublished" do
+    = hidden_field_tag :show_id, show.id
+    = submit_tag "Publish", :class => [ 'btn', 'btn-mini' ]
+    .confirmation.dialog
+      %p= "You are publishing the #{l show.datetime_local_to_event} showing of #{show.event.name}."
+
+  = form_tag event_show_path(@event, show), :method => :delete, :remote => true, :'data-type' => :json, :class => "sprited destroyable" do
+    = hidden_field_tag :show_id, show.id
+    = submit_tag "Delete", :class => [ 'btn', 'btn-mini', 'btn-danger' ]
+    .confirmation.dialog
+      %p= "Are you sure you want to delete this show?  Any tickets that have been created will also be deleted."

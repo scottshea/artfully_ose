@@ -1,0 +1,21 @@
+- in_section :dashboard
+- content_for :header do
+  %h1 Account Administration
+
+%ul.kv
+  %li.row-fluid
+    .key.span2 Organization Name
+    .value.span6= @organization.name
+  %li.row-fluid
+    .key.span2 Email
+    .value.span6= @organization.email
+  %li.row-fluid
+    .key.span2 Time Zone
+    .value.span6= @organization.time_zone
+    
+- if can? :manage, current_user.current_organization
+  = link_to "Edit", edit_organization_path(@organization), {:class => "btn"}
+
+#organization-details.row
+  #memberships.span12
+    = render :partial => "memberships/list", :locals => { :organization => @organization }

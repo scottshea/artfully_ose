@@ -1,0 +1,9 @@
+%li
+  =form.label :name, "Organization Name"
+  =form.text_field :name, :class => 'input-xlarge'
+%li
+  =form.label :email, "Contact Email"
+  =form.email_field :email, :class => 'input-xlarge email-popup', "data-content" => "Your patrons will be able to respond to this email address when receiving ticket/donation receipts. You can change this at any time."
+%li
+  =form.label :time_zone, "Time Zone"
+  =form.time_zone_select( :time_zone, ActiveSupport::TimeZone.us_zones, {:default => "Eastern Time (US & Canada)"}, {:class => 'input-xlarge'})

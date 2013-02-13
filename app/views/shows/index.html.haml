@@ -1,0 +1,39 @@
+- in_section :events
+- content_for :header do
+  =render :partial=>'events/header'
+
+.row
+  .span3
+    - in_sub_section :shows
+    =render :partial=>'events/menu'
+  .span9
+    = render "shared/error_messages", :target => @event
+    .row-fluid
+      .span3
+        %h3 Shows List
+      .span9
+        =icon_link_to("Add", new_event_show_path(@event, @show), 'icon-plus-sign', 'btn', '')
+    %table.table
+      %thead
+        %th Date/Time
+        %th
+        %th On sale
+        %th Sold
+        %th Comped
+      %tbody
+        -if @shows.empty?
+          %tr
+            %td{:colspan => 5}
+              .no-image.full
+                #text
+                  =link_to 'You have no shows scheduled.  Add one now.', new_event_show_path(@event, @show)
+        -@shows.each do |show|
+          %tr{ :class => [show.state, show.destroyable? ? "destroyable" : "" ] }
+            %td
+              =link_to l(show.datetime_local_to_event, :format => :short), event_show_path(@event, show), :title => 'show-datetime'
+            %td{:style => 'text-align:right'}
+              =render :partial => "shows/controls", :locals => { :show => show }
+            %td.available_value= show.glance.available_total
+            %td.gross_value= show.glance.sold_total
+            %td.comped_value= show.glance.comped_total
+                  

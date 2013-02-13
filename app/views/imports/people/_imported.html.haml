@@ -1,0 +1,25 @@
+.row
+  .span4
+    %p This import was created at: <br> #{l import.created_at}
+    %p= link_to "Back to imports/exports", imports_path, :class => "btn"
+
+  .span8
+    .well
+      %h3 This file has been imported into Artful.ly.
+      %p #{pluralize @import.rows.count, "people"} were imported.  
+    
+    - unless @people.empty?
+      %table.table.table-bordered.table-striped
+        %tr
+          %th Email
+          %th First
+          %th Last
+          %th 
+        - @people.each_with_index do |row, index|
+          %tr
+            %td=row.email
+            %td=row.first_name
+            %td=row.last_name
+            %td=icon_link_to "", person_path(row), 'icon-share-alt', '', ''
+            
+      = will_paginate @people

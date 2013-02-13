@@ -1,0 +1,209 @@
+:javascript
+  var organizationId = #{h @event.organization.id};
+  var eventName = "#{h @event.name}";
+  var sync_store_order_path = "#{sync_store_order_path}";
+  var store_checkout_path = "#{store_checkout_path}";
+- content_for :title do
+  Buy tickets to #{@event.name}
+.container
+  %h1#logo= @event.name
+  %p= @event.producer
+
+  .row
+    .span8  
+      %h6 Buy Tickets
+
+      - @use_calendar = (@event.upcoming_public_shows.length > 5 || params[:calendar] == 'true')
+
+      %ul#shows.unstyled
+        =render :partial => 'show', :collection => @event.upcoming_public_shows, :as => :show
+      
+      =render 'calendar' if @use_calendar
+      
+    .span4
+      - unless @event.description.blank?
+        #description.side-section
+          %h6 About
+          =image_tag(@event.image.url(:thumb), :width => 140, :height => 140) if @event.image?
+          -if @event.description.length > 300
+            .toggle-truncated
+              .truncated
+                = simple_format "#{truncate(@event.description, :length => 300)} (#{link_to 'more','#', :class => 'toggle'})"
+              .not-truncated{:style => 'display:none;'}
+                =simple_format "#{@event.description} (#{link_to 'less','#', :class => 'toggle'})"
+          - else
+            =simple_format @event.description
+      #venue.side-section
+        %h6 Venue
+        =link_to image_tag("https://maps.google.com/maps/api/staticmap?size=140x140&maptype=roadmap&markers=color:red|#{@event.venue.address_as_url_query}&sensor=false&zoom=15"), "https://maps.google.com/maps?q=#{@event.venue.address_as_url_query.html_safe}&z=15"
+        %div
+          %strong=@event.venue.name
+        %div=@event.venue.street_as_string
+        %div=@event.venue.city_state_zip_as_string
+      - unless @event.contact_email.blank? && @event.contact_phone.blank?
+        #contact.side-section
+          %h6 Contact
+          - unless @event.contact_email.blank?
+            = mail_to @event.contact_email
+            <br />
+          - unless @event.contact_phone.blank?
+            = @event.contact_phone
+      - if @event.organization.authorization_hash[:authorized]
+        #donation.side-section
+          %h6 Donate
+          - if @event.organization.authorization_hash[:type] == :sponsored
+            %p="#{@event.organization.authorization_hash[:fsp_name]} is a fiscally sponsored project of Fractured Atlas, a non-profit arts service organization. Contributions for the purposes of #{@event.organization.authorization_hash[:fsp_name]} must be made payable to Fractured Atlas and are tax-deductible to the extent permitted by law."
+          - else
+            %p Help support the show by adding a donation to your order! Contributions are tax-deductible to the extent permitted by law.
+          = form_tag '', :class => 'add-donation-to-cart form-inline' do
+            .input-prepend
+              %span.add-on $
+              = text_field_tag :donation_amount, '', :class => 'span1'
+            = submit_tag 'Donate Now', :class => 'btn btn-primary'
+
+#shopping-cart.shown
+  #shopping-cart-controls
+    %span.cart-name Shopping Cart
+  = form_tag '', :id => 'shopping-cart-form', :class => 'form-horizontal' do
+    #steps
+      %ul#nav
+        %li.active= link_to 'Cart', '#cart', 'data-toggle' => 'tab'
+        %li.disabled= link_to 'Contact Info', '#contact-info', 'data-toggle' => 'tab'
+        %li.disabled= link_to 'Payment Details', '#payment-details', 'data-toggle' => 'tab'
+        %li.disabled= link_to 'Billing Address', '#billing-address', 'data-toggle' => 'tab'
+        - if @event.show_special_instructions
+          %li.disabled= link_to 'Special Instructions', '#special-instructions', 'data-toggle' => 'tab'
+        %li.disabled= link_to 'Purchase', '#purchase', 'data-toggle' => 'tab'
+      .tab-pane#cart{:style => 'display:block;'}
+        %table
+
+          %tr#service-charge{:style => 'display:none'}
+            %td
+            %td.details
+              Service Charge
+            %td.quantity
+            %td.price
+              %h5.formatCurrency
+
+          %tr#discount-link{:style => 'display:none'}
+            %td
+            %td= link_to "Apply Discount Code", "#"
+            %td#discount-error
+
+          %tr#discount-input{:style => 'display:none'}
+            %td
+            %td= text_field_tag 'discount', params[:discount], :placeholder => "Enter discount here, eg. COWBELL"
+            %td= button_tag "Apply", :class => 'btn btn-primary', :disable_with => "Applying..."
+
+          %tr#discount-display{:style => 'display:none'}
+            %td
+            %td.details
+              Discount code
+              %span BLANK
+            %td= button_tag "Change", :class => 'btn btn-primary'
+            %td.amount
+              %h5.formatCurrency
+
+        .form-actions
+          = link_to 'Checkout Now', '#contact-info', 'data-toggle' => 'tab', :class => 'btn btn-primary btn-large pull-right disabled'
+          %h4#cart-total.formatCurrency
+
+      .tab-pane#contact-info
+        = fields_for "payment[customer]" do |customer|
+          .control-group
+            = customer.label :first_name, "First Name", :class => 'control-label required'
+            .controls= customer.text_field :first_name, :class => 'required'
+          .control-group
+            = customer.label :last_name, "Last Name", :class => 'control-label required'
+            .controls= customer.text_field :last_name, :class => 'required'
+          .control-group
+            = customer.label :email, "Email", :class => 'control-label required'
+            .controls= customer.text_field :email, :class => 'required', :type => 'email'
+          .control-group
+            = customer.label :phone, "Phone", :class => 'control-label required'
+            .controls= customer.text_field :phone, :class => 'required'
+        .form-actions
+          = link_to 'Next »', '#payment-details', 'data-toggle' => 'tab', :class => 'btn btn-primary btn-large pull-right'
+      
+      .tab-pane#payment-details
+        #payment-details-fields
+          = fields_for "payment[credit_card]" do |card|
+            .control-group
+              = card.label :name, "Cardholder Name", :class => 'control-label nonzero-total'
+              .controls= card.text_field :name, :class => 'nonzero-total'
+              
+            .control-group
+              = card.label :number, "Card Number", :class => 'control-label nonzero-total'
+              .controls= card.text_field :number, :class => 'nonzero-total', :type => 'creditcard'
+              
+            .control-group
+              = card.label :verification_value, "CVV", :class => 'control-label nonzero-total'
+              .controls
+                = card.text_field :verification_value, :class => 'span1 nonzero-total'
+                = image_tag 'storefront/cvv.gif'
+                
+            .control-group
+              = card.label :expiration, "Expiration", :class => 'control-label nonzero-total'
+              .controls
+                = card.select 'month', options_for_select((1..12).map{|m| "%02d" % m}), {}, :class => "span1 nonzero-total"
+                \/
+                = card.select 'year', options_for_select(Date.today.year..Date.today.year+10), {}, :class => "span1 nonzero-total"
+        #payment-details-message.hidden
+          No payment details are necessary. Click Next to continue.
+        .form-actions
+          = link_to 'Next »', '#billing-address', 'data-toggle' => 'tab', :class => 'btn btn-primary btn-large pull-right'
+      
+      .tab-pane#billing-address
+        = fields_for "payment[customer][address]" do |address|
+          .control-group
+            = address.label :address1, "Billing Address", :class => 'control-label required'
+            .controls= address.text_field :address1, :class => 'required'
+          .control-group
+            = address.label :city, "City", :class => 'control-label required'
+            .controls= address.text_field :city, :class => 'required'
+          .control-group
+            = address.label :state, "State", :class => 'control-label required'
+            .controls= address.select(:state, options_for_select(sorted_us_state_names), :class => 'required')
+          .control-group
+            = address.label :zip, "Postal Code", :class => 'control-label required'
+            .controls= address.text_field :zip, :class => 'required span2'
+        .form-actions
+          - if @event.show_special_instructions
+            = link_to 'Next »', '#special-instructions', 'data-toggle' => 'tab', :class => 'btn btn-primary btn-large pull-right'
+          - else
+            = link_to 'Next »', '#purchase', 'data-toggle' => 'tab', :class => 'btn btn-primary btn-large pull-right'
+              
+      
+      - if @event.show_special_instructions
+        .tab-pane#special-instructions
+          .control-group
+            = label_tag :special_instructions, @event.special_instructions_caption, :class => 'control-label'
+            .controls= text_area_tag :special_instructions, nil
+          .form-actions
+            = link_to 'Next »', '#purchase', 'data-toggle' => 'tab', :class => 'btn btn-primary btn-large pull-right'
+
+      .tab-pane#purchase
+        .control-group
+          .controls
+            %label.checkbox
+              I have read, understand and accept the terms and conditions of the User Agreement below.
+              = check_box_tag "payment[user_agreement]", 1, false, :id => 'agreement-checkbox'
+            %label.error.checkbox{:style => 'display:none;'} Please agree to the terms and conditions.
+          
+        #user_agreement
+          = t("pages.user_agreement.content", :default => "")
+        = hidden_field_tag :confirmation, 1
+        .form-actions
+          = submit_tag 'Complete Purchase', :id => 'complete-purchase', :class => 'btn btn-primary btn-large pull-right'
+
+      .tab-pane#result
+      .tab-pane#thanks
+        %h2 Thank you for your order!
+        %p= t 'artfully.checkout_message'
+        %p You'll receive an email confirmation of your order shortly.
+        - unless @event.contact_email.blank? && @event.contact_phone.blank?
+          %p If you have any questions or need information about the event, contact us at 
+          .email
+            #{mail_to @event.contact_email if @event.contact_email.present?} 
+          .phone
+            #{@event.contact_phone}

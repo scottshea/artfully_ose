@@ -1,0 +1,44 @@
+- in_section :dashboard
+
+- content_for :header do
+  %h1 Dashboard
+
+= render :partial => 'layouts/admin_messages'
+
+.row
+  .span4
+    %section
+      %h3 My Organization
+      %p
+        - if current_user.is_in_organization?
+          =link_to current_user.current_organization.name, organization_path(current_user.current_organization)
+        - else
+          You are not in an organization yet.  Ask your organization administrator to add you, or
+          =link_to "create your own.", new_organization_path
+
+    %section
+      %h3 Recent Activity
+      - if @recent_actions.blank?
+        %p= t(".no-actions", :default => "When someone buys a ticket, makes a donation, or updates a record, it will be noted here. Get started by adding some new contacts to your People database.")
+        = link_to "Add a Contact", new_person_path, :class => 'btn'
+      - else
+        %ul#recent-list
+          - @recent_actions.each do |action|
+            %li.row-fluid
+              .span2
+                = image_tag "actions/#{action.action_type.downcase}.png"
+              .span10
+                =link_to_person (action.person)
+                =action.sentence
+
+  .span8
+    %section
+
+      -if @ticket_offers
+        = render :partial => "ticket_offers/list", :locals => { :ticket_offers => @ticket_offers }
+
+      %h3 Events
+      = render :partial => 'events/list', :locals => { :events => @events }
+      - unless @events.blank?
+        .pull-right
+          =icon_link_to("View All Events", events_path, 'icon-arrow-right', 'btn', '')

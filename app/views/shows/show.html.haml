@@ -1,0 +1,27 @@
+- in_section :events
+- content_for :header do
+  =render :partial=>'events/header'
+
+.row
+  .span3
+    - in_sub_section :shows
+    =render :partial=>'events/menu'
+  .span9
+    = render "shared/error_messages", :target => @event
+    #show-headline.row-fluid
+      .span6
+        %h3=l @show.datetime_local_to_event, :format => :day_time
+        #show-links
+          =icon_link_to("Door List", door_list_event_show_path(@event, @show), 'icon-list', 'btn', '')
+          =icon_link_to("Box Office", new_event_show_sales_path(@event,@show), 'icon-shopping-cart', 'btn', '')
+      .span6
+        = render :partial => "glance", :locals => { :report => @show.glance, :show => @show }
+    #tickets
+      .row-fluid
+        .span2
+          %h3 Tickets
+        .span10
+          =icon_link_to("Add New Ticket Type", new_chart_section_path(@show.chart, :format => :html), 'icon-plus-sign', 'btn add-new-ticket-type-link', '', {"data-remote" => 'true'})
+      = render :partial => 'ticket_table', :locals => { :show => @show, :tickets => @show.tickets }
+      
+#newTicketType.modal

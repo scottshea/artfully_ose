@@ -1,0 +1,48 @@
+- in_section :events
+- content_for :header do
+  =render :partial=>'events/header'
+
+.row
+  .span3
+    - in_sub_section :details
+    =render :partial=>'events/menu'
+  .span9
+    = form_for( [@event, @venue], :html => { :class => 'form-horizontal' }) do |form|
+      .control-group
+        =form.label :name, "Venue name", :class => 'control-label'
+        .controls
+          = form.text_field :name
+          
+      .control-group
+        =form.label :address1, "Address 1", :class => 'control-label'
+        .controls
+          = form.text_field :address1
+          
+      .control-group
+        =form.label :address2, "Address 2", :class => 'control-label'
+        .controls
+          = form.text_field :address2
+          
+      .control-group
+        =form.label :city, "City", :class => 'control-label'
+        .controls
+          = form.text_field :city
+          
+      .control-group
+        =form.label :state, "State", :class => 'control-label'
+        .controls
+          = form.select(:state, options_for_select(sorted_us_state_names, @event.venue.state))
+          
+      .control-group
+        =form.label :zip, "Zip", :class => 'control-label'
+        .controls
+          = form.text_field :zip
+          
+      .control-group
+        =form.label :time_zone, "Time Zone", :class => 'control-label'
+        .controls
+          = form.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, {:default => current_user.current_organization.time_zone}, {:class => 'input-xlarge'}
+          
+      .form-actions
+        = form.submit "Save", :class => 'btn'
+        = form.submit "Save &amp; Next".html_safe, :class => 'btn btn-primary'

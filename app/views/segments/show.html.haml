@@ -1,0 +1,29 @@
+- in_section :people
+- content_for :title do
+  #{@segment.name} List Segment
+- content_for :header do
+  %h1
+    List Segment:
+    = @segment.name
+
+.row
+  .span4
+    %h3 Details
+    .details-long= @segment.description.html_safe
+    %h3 Export
+    %p
+      To view all the data on patrons in this segment, including mailing address and phone numbers, export this segment to
+      = link_to('CSV', segment_path(@segment, :format => :csv))
+    %p= link_to "Delete", @segment, :method => :delete, :class=>'btn btn-danger', :data => {:confirm => "Are you sure you want to delete list segment #{@segment.name}?"}
+
+  .span8
+    %table.table.people-list
+      %tbody
+        - @segment.people.each do |person|
+          %tr
+            %td.name= link_to_person person
+            %td.email= person.email
+            %td.tag-cell
+              %ul.detailed-list.tags.pull-right{:id => "people-people-tags"}
+                - person.tag_list.each do |tag|
+                  %li.tag.rounder= tag

@@ -1,0 +1,33 @@
+.row
+  .span8.offset2
+    .merge-confirm-block#loser
+      = render :partial => 'merge_preview_person', :locals => { :person => @loser }
+              
+    #merge-arrow
+      =icon_tag "57-download@2x"
+          
+    .merge-confirm-block#winner
+      = render :partial => 'merge_preview_person', :locals => { :person => @winner }
+              
+    %p
+      You are merging
+      %strong="#{@loser.first_name} #{@loser.last_name}"
+      into
+      %strong="#{@winner.first_name} #{@winner.last_name}" 
+              
+    %p
+      All notes, actions, phone numbers, and tags from 
+      %strong="#{@loser.first_name} #{@loser.last_name}"
+      will be merged into
+      %strong="#{@winner.first_name} #{@winner.last_name}" 
+    %p
+      Mailing address, email, company name, and website for
+      %strong="#{@loser.first_name} #{@loser.last_name}"
+      will be discarded.
+    
+    =form_tag merges_path do
+      = hidden_field_tag 'winner', @winner.id
+      = hidden_field_tag 'loser', @loser.id
+      .form-actions
+        =submit_tag "Merge", :class => 'btn btn-large btn-success'
+        =link_to "Cancel", person_path(@loser), :class => 'btn btn-large btn-danger'

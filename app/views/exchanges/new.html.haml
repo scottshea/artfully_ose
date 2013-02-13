@@ -1,0 +1,89 @@
+- in_section :people
+- content_for :header do
+  %h1 Exchanging Tickets
+
+.row
+  .span4
+    %h3 1. Choose an Event
+    %ul.nav.nav-pills.nav-stacked#event-drilldown
+      - @events.each do |event|
+        %li{:class => @event && event.id == @event.id ? :active : :unselected }
+          = link_to event.name, params.merge({:event_id => event.id}), :title => 'event-name'
+
+  .span4
+    - unless @shows.nil?
+      %h3 2. Choose a Show
+      - if @shows.empty?
+        %p Sorry, there are no upcoming shows with tickets available
+      - else
+        %ul.nav.nav-pills.nav-stacked#show-drilldown
+          - @shows.each do |show|
+            %li{:class => @show && show.id == @show.id ? :active : :unselected }
+              = link_to l(show.datetime_local_to_event, :format => :short), params.merge({:show_id => show.id}), :title => 'show-datetime'
+
+  .span4
+    - unless @show.nil?
+      %h3 3. Choose a Ticket Type
+      %ul.nav.nav-pills.nav-stacked#section-drilldown
+        - @show.chart.sections.each do |section|
+          %li{:class => @section && section.id == @section.id ? :active : :unselected }
+            = link_to (truncate(section.name, :length => 20, :separator => ' ', :omission => '...') + ' ' + number_as_cents(section.price)), params.merge({:section_id => section.id}), :title => 'section-name'
+
+.row          
+  .span6
+    - unless @section.nil?
+      %h3 4. Select tickets
+      - if @tickets.empty?
+        %p Sorry, there are no tickets available in that section.
+      - else
+        %p="You are exchanging #{pluralize(params[:items].length, 'ticket')}, please select #{pluralize(params[:items].length, 'ticket')} below"
+        = form_tag '/exchanges' do
+          = hidden_field_tag :order_id, params[:order_id]
+          - params[:items].each do |item_id|
+            = hidden_field_tag "items[]", item_id
+          .controls
+            - @tickets.each do |ticket|
+              %label.checkbox
+                = check_box_tag "tickets[]", ticket.id, false, :id => "ticket_#{ticket.id}", :class => "checkbox ticket-control"
+                ="#{ticket.section.name}, #{number_as_cents ticket.price}"
+          %p
+            = submit_tag "Exchange these tickets", :class => "btn"
+            
+  .span6
+    - unless @section.nil?
+      #section-details
+        %h6 About this section
+        %table.table
+          %tr
+            %td Price
+            %td=number_as_cents @section.price
+          %tr
+            %td Total Tickets
+            %td=@section.summary.total
+          %tr
+            %td On Sale
+            %td= @section.summary.available
+          %tr
+            %td Sold
+            %td=@section.summary.sold
+          %tr
+            %td Comped
+            %td=@section.summary.comped
+      #show-details
+        %h6 About this show
+        %table.table
+          %tr
+            %td Potential Remaining
+            %td= number_as_cents(@show.glance.potential_remaining)
+          %tr
+            %td Original Potential
+            %td= number_as_cents(@show.glance.potential_original)
+          %tr
+            %td On Sale
+            %td= @show.glance.available_total
+          %tr
+            %td Sold
+            %td= @show.glance.sold_total
+          %tr
+            %td Comped
+            %td= @show.glance.comped_total

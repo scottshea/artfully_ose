@@ -1,0 +1,120 @@
+- in_section :imports
+- content_for :header do
+  %h1 Import People
+
+.row
+  .span3
+    %h2
+      %span.badge.badge-big.badge-info 1
+      Template
+    #{link_to 'Download an empty CSV file', template_imports_path(:type => "people")} with these headers already filled in.
+  
+  .span6
+    %h2
+      %span.badge.badge-big.badge-info 2
+      Format
+    %h3 Please include one of the following
+    .bottom-room= render :partial => "imports/shared/knowledge_base"
+    %table.table.table-bordered.table-striped.docs
+      %tr 
+        %td.field-slim First 
+        %td The first name of the person
+      %tr 
+        %td.field-slim Last
+        %td The last name of the person
+      %tr 
+        %td.field-slim Email
+        %td The email address of the person  
+    
+    %h3 Optional Fields
+    %table.table.table-bordered.table-striped.docs
+      %tr
+        %td.field-slim Salutation
+        %td The person's salutation (Mr., Mrs., etc...)
+      %tr
+        %td.field-slim Title
+        %td The person's title
+      %tr
+        %td.field-slim Company
+        %td The person's company name
+      %tr
+        %td.field-slim Address1
+        %td First line of the person's address
+      %tr
+        %td.field-slim Address2
+        %td Second line of the person's address
+      %tr
+        %td.field-slim City
+        %td The person's city
+      %tr
+        %td.field-slim State
+        %td The person's state
+      %tr
+        %td.field-slim Zip
+        %td The person's zip code
+      %tr
+        %td.field-slim Country
+        %td The person's country
+      %tr
+        %td.field-slim Phone 1 type
+        %td Work, Home, Cell or Fax
+      %tr
+        %td.field-slim Phone 1
+        %td The person's first phone number
+      %tr
+        %td.field-slim Phone 2 type
+        %td Work, Home, Cell or Fax
+      %tr
+        %td.field-slim Phone 2
+        %td The person's second phone number
+      %tr
+        %td.field-slim Phone 3 type
+        %td Work, Home, Cell or Fax
+      %tr
+        %td.field-slim Phone 3
+        %td The person's third phone number
+      %tr
+        %td.field-slim Website
+        %td The person's website
+      %tr
+        %td.field-slim Twitter
+        %td The person's handle on Twitter
+      %tr
+        %td.field-slim Facebook
+        %td The person's web address on Facebook
+      %tr
+        %td.field-slim LinkedIn 
+        %td The person's web address on LinkedIn
+      %tr
+        %td.field-slim Do Not Email 
+        %td Indicate that this person is not to receive email communication from your organization.  This is for your organization's internal use only.  The person will still receive purchase and donation receipts from Artful.ly.
+      %tr
+        %td.field-slim Tags
+        %td
+          %span.label.label-success
+            Important!
+          &nbsp Tags you'd like to associate with this person, separated by vertical bars (e.g., "vip|board").
+      %tr
+        %td.field-slim Type
+        %td Individual, Corporation, Foundation, Government or Other
+    
+  .span3  
+    %h2
+      %span.badge.badge-big.badge-info 3
+      Upload
+    %p
+      Please only upload
+      %b Comma Separated Values (CSV)
+      files.  We cannot process 
+      %b XLS
+      or
+      %b XLSX
+      files.
+    %p
+      = render :partial => "shared/error_messages", :locals => { :target => @import }
+      = raw s3_http_upload_tag :key => "imports/#{UUID.new.generate}",
+          :content_type => "text/csv",
+          :redirect => new_import_url,
+          :acl => "public-read",
+          :max_filesize => 50.megabytes,
+          :submit_button => '<input type="hidden" value="people"/><div class="cancel-submit"><input id="import_submit" class="btn" name="commit" type="submit" value="Import"></div>'

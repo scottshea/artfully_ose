@@ -1,0 +1,21 @@
+.nav.nav-accordian
+  = active_link_to 'Event Overview', event_path(@event)
+  %li.accordian{:class => active?(:details)}
+    = link_to 'Event Details', edit_event_path(@event)
+    %ul.accordian-menu
+      = active_link_to 'About', edit_event_path(@event)
+      = active_link_to 'Venue', edit_event_venue_path(@event)
+      = active_link_to 'Prices', prices_event_path(@event)
+      = active_link_to 'Image', image_event_path(@event)
+      = active_link_to 'Messages', messages_event_path(@event)
+  %li.accordian{:class => active?(:shows)}
+    = link_to 'Shows List', event_shows_path(@event)
+    %ul.accordian-menu
+      %li.add
+        %a{:href => new_event_show_path(@event)}
+          %i.icon-plus-sign.icon-gray
+          Add show
+      - @event.shows.each do |show|
+        = active_link_to l(show.datetime_local_to_event, :format => :day_time), event_show_path(@event, show)
+
+  = render :partial => 'events/share_and_sell', :locals => { :event => @event }

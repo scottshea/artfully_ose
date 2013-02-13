@@ -1,0 +1,29 @@
+:erb
+  <style>
+  path {
+    stroke: #000;
+    stroke-width: 1.5;
+    cursor: pointer;
+  }
+  </style>
+
+
+- content_for :header do
+  %h2 Slices
+
+.row
+  .span3
+    =select_tag "slice", options_for_select(@select_options)
+    =select_tag "slice", options_for_select(@select_options)
+    =select_tag "slice", options_for_select(@select_options)
+
+  .span9
+    #vis
+
+
+-content_for :custom_js do
+  :erb
+    <script>
+      var show_id = <%=@show.id%>
+    </script>
+  = javascript_include_tag 'slicer'

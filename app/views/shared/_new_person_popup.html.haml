@@ -1,0 +1,21 @@
+#new-person-popup.modal
+  = form_for Person.new, :url => people_path, :remote => true, :html => { "class" => "form-horizontal", "data-type" => :json } do |form|
+    .modal-header
+      .close{'data-dismiss'=>'modal'} x
+      %h3 New Person
+    .modal-body
+      #error
+      .control-group
+        = form.label :first_name, "First Name"
+        .control-group
+          = form.text_field :first_name
+      .control-group
+        = form.label :last_name, "Last Name"
+        .control-group
+          = form.text_field :last_name
+      .control-group
+        = form.label :email, "Email"
+        .control-group
+          = form.text_field :email
+    .modal-footer
+      = form.submit :class => "btn"

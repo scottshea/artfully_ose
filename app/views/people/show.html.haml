@@ -1,0 +1,37 @@
+- in_section :people
+- content_for :title do
+  #{@person}
+
+.row
+  .span4
+    = render :partial=>'person_summary_sidebar', :locals => { :person => @person }
+
+  .span8
+    %section#actions
+      .row-fluid.form-actions
+        .span2
+          %h3 Actions
+        .span10
+          =icon_link_to("Hear", new_person_action_path(@person, :format => :html, :type => :hear), 'icon-volume-up', 'btn', 'hear-action-link', {"data-remote" => "true"})
+          =icon_link_to("Give", new_contribution_path("contribution[person_id]" => @person.id), 'icon-gift', 'btn', '')
+      = render :partial => 'actions/list', :locals => { :person => @person, :actions => (@person.starred_actions + @person.unstarred_actions ) }
+
+    %section#notes
+      .row-fluid.form-actions
+        .span2
+          %h3 Notes
+        .span10=icon_link_to("Add", new_person_note_path(@person, :format => :html), 'icon-plus-sign', 'btn new-note-link', '', {"data-remote" => "true"})
+
+    = render :partial=>'notes/list', :locals => { :person => @person, :notes => @person.notes, :subject => @person }
+    
+
+    %section#orders
+      .row-fluid.form-actions
+        .span2
+          %h3 Sales
+
+    = render :partial=>'orders/by_person', :locals => { :orders => @orders }
+
+    #hear-action-modal.modal
+    #new-note-popup.modal
+
