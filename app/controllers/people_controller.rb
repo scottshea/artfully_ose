@@ -1,5 +1,6 @@
 class PeopleController < ArtfullyOseController
   respond_to :html, :json
+  before_filter :load_tags, :only => [:show]
 
   def new
     authorize! :create, Person

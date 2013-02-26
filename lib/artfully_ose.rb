@@ -9,6 +9,8 @@ require "devise_suspendable"
 require "active_merchant"
 require "braintree"
 
+require "active_model_serializers"
+
 require "delayed_job"
 require "delayed_job_active_record"
 require "audited-activerecord"
@@ -39,7 +41,6 @@ require "gibbon"
 require "set_watch_for"
 require "swiper"
 require "slicer"
-require "restful_metrics"
 
 module ArtfullyOse
 end

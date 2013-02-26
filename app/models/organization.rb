@@ -36,6 +36,31 @@ class Organization < ActiveRecord::Base
     orders.where('transaction_id is not null')
   end
 
+  #
+  # Good candidate to be added to acts_as_taggable_on
+  # Returns Tag objects.  For an array of tag strings, call unique_tag_strings_for
+  #
+  def tags_for(tagged_association)
+    
+    #Yak
+    begin
+      self.send(tagged_association.to_sym)
+    rescue NoMethodError
+      raise NoMethodError, "No tagged has_many association found for #{tagged_association.to_sym}"
+    end
+
+    table_name = Kernel.const_get(tagged_association.to_s.classify).table_name
+    
+    ActsAsTaggableOn::Tag.joins("INNER JOIN taggings ON tags.id = taggings.tag_id")
+                         .joins("INNER JOIN #{table_name} ON #{table_name}.id = taggings.taggable_id")
+                         .joins("INNER JOIN organizations ON organizations.id = #{table_name}.organization_id")
+                         .where("organizations.id = ?", self.id)
+  end
+
+  def unique_tag_strings_for(tagged_association)
+    self.tags_for(tagged_association).all.map(&:name).uniq
+  end
+
   def owner
     users.first
   end

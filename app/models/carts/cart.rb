@@ -117,7 +117,6 @@ class Cart < ActiveRecord::Base
   end
 
   def finish
-    metric_sale_total
   end
 
   def generate_donations
@@ -167,22 +166,6 @@ class Cart < ActiveRecord::Base
 
     def pay_with_authorization(payment, options)
       payment.purchase(options) ? approve! : reject!
-    end
-
-    def metric_sale_total
-      bracket =
-        case self.total
-        when 0                  then "$0.00"
-        when (1 ... 1000)       then "$0.01 - $9.99"
-        when (1000 ... 2000)    then "$10 - $19.99"
-        when (2000 ... 5000)    then "$20 - $49.99"
-        when (5000 ... 10000)   then "$50 - $99.99"
-        when (10000 ... 25000)  then "$100 - $249.99"
-        when (25000 ... 50000)  then "$250 - $499.99"
-        else                         "$500 or more"
-        end
-
-      RestfulMetrics::Client.add_compound_metric(ENV["RESTFUL_METRICS_APP"], "sale_complete", [ bracket ])
     end
 
 end

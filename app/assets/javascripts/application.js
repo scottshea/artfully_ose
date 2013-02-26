@@ -205,13 +205,8 @@ $(document).ready(function() {
   });
 
   $(".new-tag-form").bind("ajax:beforeSend", function(evt, data, status, xhr){
-		var tagText = $('#new-tag-field').attr('value');
-		if(!validTagText(tagText)) {
-			$('.tag-error').text("Only letters, number, or dashes allowed in tags");
-			return false;
-		} else {
-			$('.tag-error').text("");
-		}
+		tagText = validateTag()
+    if(!tagText) { return false; }
 
     newTagLi = $(document.createElement('li'));
 		newTagLi.addClass('tag').addClass('deletable').addClass('rounder').html(tagText).appendTo($('.tags'));
@@ -267,6 +262,18 @@ bindXButton = function() {
     $(this).closest('.tag').remove();
   });
 };
+
+
+validateTag = function() {
+  var tagText = $('#new-tag-field').attr('value');
+  if(!validTagText(tagText)) {
+    $('.tag-error').text("Only letters, number, or dashes allowed in tags");
+    return false;
+  } else {
+    $('.tag-error').text("");
+    return tagText;
+  }
+}
 
 /*
  * Validates alphanumeric and -

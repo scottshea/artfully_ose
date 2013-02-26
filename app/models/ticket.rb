@@ -1,6 +1,7 @@
 class Ticket < ActiveRecord::Base
   include ActiveRecord::Transitions
   include Ext::Resellable::Ticket
+  include Ext::Integrations::Ticket
   include Ticket::Pricing
   include Ticket::Transfers
   include Ticket::SaleTransitions
@@ -40,9 +41,9 @@ class Ticket < ActiveRecord::Base
 
     event(:on_sale)                                   { transitions :from => [ :on_sale, :off_sale ],   :to => :on_sale   }
     event(:off_sale)                                  { transitions :from => [ :on_sale, :off_sale ],   :to => :off_sale  }
-    event(:exchange, :success => :metric_exchanged)   { transitions :from => [ :on_sale, :off_sale ],   :to => :sold      }
-    event(:sell, :success => :metric_sold)            { transitions :from => [ :on_sale ],              :to => :sold      }
-    event(:comp)                                      { transitions :from => [ :on_sale, :off_sale ],   :to => :comped    }
+    event(:exchange, :success => :record_exchange)    { transitions :from => [ :on_sale, :off_sale ],   :to => :sold      }
+    event(:sell, :success => :record_sale)            { transitions :from => [ :on_sale ],              :to => :sold      }
+    event(:comp, :success => :record_comp)            { transitions :from => [ :on_sale, :off_sale ],   :to => :comped    }
     event(:return_to_inventory)                       { transitions :from => [ :comped, :sold ],        :to => :on_sale   }
     event(:return_off_sale)                           { transitions :from => [ :comped, :sold ],        :to => :off_sale  }
   end
@@ -163,14 +164,4 @@ class Ticket < ActiveRecord::Base
     t.state = 'on_sale' if on_sale
     t
   end
-
-  private
-    def metric_sold
-      RestfulMetrics::Client.add_metric(ENV["RESTFUL_METRICS_APP"], "ticket_sold", 1)
-    end
-
-    def metric_exchanged
-      RestfulMetrics::Client.add_metric(ENV["RESTFUL_METRICS_APP"], "ticket_exchanged", 1)
-    end
-
 end

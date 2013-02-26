@@ -3,6 +3,19 @@ module Ext
     module User
     end
     
+    module Kit      
+      def record_activation
+      end
+
+      def record_approval
+      end
+    end
+
+    module Show
+      def record_publish
+      end
+    end
+    
     module Organization
       def self.included(base)
         base.class_eval do
@@ -96,6 +109,17 @@ module Ext
           standard.all
         end
       end     
+    end
+
+    module Ticket
+      def record_sale
+      end
+
+      def record_exchange
+      end
+
+      def record_comp
+      end
     end
     
     module Event

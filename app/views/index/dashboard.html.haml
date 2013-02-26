@@ -39,6 +39,7 @@
 
       %h3 Events
       = render :partial => 'events/list', :locals => { :events => @events }
-      - unless @events.blank?
-        .pull-right
+      = link_to "Create New Event", new_event_path, :class => "btn btn-primary"
+      .pull-right
+        - unless @events.blank?
           =icon_link_to("View All Events", events_path, 'icon-arrow-right', 'btn', '')

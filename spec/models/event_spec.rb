@@ -61,15 +61,16 @@ describe Event do
   
   describe "#upcoming_shows" do
     it "should default to a limit of 5 performances" do
-      subject.shows = 10.times.collect { FactoryGirl.build(:show, :datetime => (DateTime.now + 1.day)) }
+      subject.shows = 10.times.collect { FactoryGirl.create(:show, :event => subject,:datetime => (DateTime.now + 1.day)) }
       subject.upcoming_shows.should have(5).shows
     end
   
     it "should fetch performances that occur after today at the beginning of the day" do
-      test_performances = 3.times.collect { mock(:show, :datetime => (DateTime.now + 1.day), :datetime_local_to_event => (DateTime.now + 1.day)) }
-      test_performances += 2.times.collect { mock(:show, :datetime => (DateTime.now - 1.day), :datetime_local_to_event => (DateTime.now - 1.day)) }
-      subject.stub(:shows).and_return(test_performances)
+      3.times.collect { FactoryGirl.create(:show, :event => subject, :datetime => (DateTime.now + 3.days)) }
+      2.times.collect { FactoryGirl.create(:show, :event => subject, :datetime => (DateTime.now + 1.day)) }
+      Timecop.travel(DateTime.now + 2.days)
       subject.upcoming_shows.should have(3).shows
+      Timecop.return
     end
   end
   
@@ -77,7 +78,7 @@ describe Event do
     subject { FactoryGirl.build(:event) }
   
     it "should not include performances that are on sale" do
-      subject.shows = 2.times.collect { FactoryGirl.build(:show) }
+      subject.shows = 2.times.collect { FactoryGirl.create(:show, :event => subject) }
       subject.shows.first.build!
       subject.shows.first.publish!
       subject.stub(:charts).and_return([])

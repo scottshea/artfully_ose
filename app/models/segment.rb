@@ -16,4 +16,8 @@ class Segment < ActiveRecord::Base
   def people
     @people ||= search.people
   end
+
+  def tag(tag)
+    Delayed::Job.enqueue(TagJob.new(tag, self.people))
+  end
 end

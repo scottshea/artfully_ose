@@ -73,7 +73,11 @@ Rails.application.routes.draw do
     resource  :address, :only => [:create, :update, :destroy]
   end
   resources :searches, only: [:new, :create, :show]
-  resources :segments, :only => [:index, :show, :create, :destroy]
+  resources :segments, :only => [:index, :show, :create, :destroy] do
+    member do
+      post :tag
+    end
+  end
 
   resources :events do
     member do

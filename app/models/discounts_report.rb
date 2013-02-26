@@ -9,10 +9,13 @@ class DiscountsReport
       self.discount_code = "ALL DISCOUNTS"
       self.discount = Discount.where(:organization_id => organization.id)
     else
+
+      # discount is an array since there could be multiple instances of FIVEOFF
       self.discount = Discount.where(:organization_id => organization.id).where(:id => discount_code).first
-      self.discount ||= Discount.where(:organization_id => organization.id).where(:code => discount_code).first
-      self.header = self.discount.code
-      self.discount_code = self.discount.code
+      self.discount ||= Discount.where(:organization_id => organization.id).where(:code => discount_code).all
+      self.discount = Array.wrap(self.discount)
+      self.header = self.discount.first.code
+      self.discount_code = self.discount.first.code
     end
   
     self.start_date = start_date

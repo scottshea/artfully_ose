@@ -3,6 +3,7 @@ class Section < ActiveRecord::Base
   foundry :with => lambda { { :section_id => id, :price => price, :count => capacity } }
 
   attr_accessible :name, :capacity, :price, :chart_id, :old_mongo_id, :description
+  delegate :show, :to => :chart
 
   belongs_to :chart
   has_many :tickets

@@ -15,3 +15,6 @@
           %strong=number_as_cents row.gross
         %td.right=number_as_cents row.processing
         %td.right=number_as_cents row.net
+    %tr
+      %td.right{:colspan => 5}
+        = icon_link_to "Slices", statement_slices_path(@show.id, 'slice[]' => 'order_location_proc'), 'icon-chevron-right', 'btn', ''

@@ -81,6 +81,15 @@ class Item < ActiveRecord::Base
     price + (nongift_amount.nil? ? 0 : nongift_amount.to_i)  
   end
 
+  #
+  # Convenience method for use when shooting down a list if items to total things up
+  #
+  def polarity
+    return -1 if refund?
+    return 0 if exchanged?
+    1
+  end
+
   def self.for(prod, per_item_lambda=lambda { |item| 0 })
     Item.new.tap do |i|
       i.per_item_processing_charge = per_item_lambda
@@ -209,6 +218,11 @@ class Item < ActiveRecord::Base
   def refund?
     state.eql? "refund"
   end
+  
+  def refunded?
+    state.eql? "refunded"
+  end
+  
   
   def exchanged?
     state.eql? "exchanged"

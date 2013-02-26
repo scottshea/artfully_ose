@@ -32,6 +32,10 @@ class ArtfullyOseController < ActionController::Base
     end
 
   private
+    def load_tags
+      @tags = current_user.current_organization.unique_tag_strings_for(:people)
+      @tags_string = "\"" + @tags.join("\",\"") + "\""
+    end
 
     def user_requesting_next_step?
       params[:commit].try(:downcase) =~ /next/

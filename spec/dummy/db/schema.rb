@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130114212408) do
+ActiveRecord::Schema.define(:version => 20130131024955) do
 
   create_table "actions", :force => true do |t|
     t.integer  "organization_id"
@@ -44,6 +44,27 @@ ActiveRecord::Schema.define(:version => 20130114212408) do
   end
 
   add_index "addresses", ["person_id"], :name => "index_addresses_on_person_id"
+
+  create_table "audits", :force => true do |t|
+    t.integer  "auditable_id"
+    t.string   "auditable_type"
+    t.integer  "associated_id"
+    t.string   "associated_type"
+    t.integer  "user_id"
+    t.string   "user_type"
+    t.string   "username"
+    t.string   "action"
+    t.text     "audited_changes"
+    t.integer  "version",         :default => 0
+    t.string   "comment"
+    t.string   "remote_address"
+    t.datetime "created_at"
+  end
+
+  add_index "audits", ["associated_id", "associated_type"], :name => "associated_index"
+  add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
+  add_index "audits", ["created_at"], :name => "index_audits_on_created_at"
+  add_index "audits", ["user_id", "user_type"], :name => "user_index"
 
   create_table "carts", :force => true do |t|
     t.string   "state"
@@ -124,6 +145,20 @@ ActiveRecord::Schema.define(:version => 20130114212408) do
     t.string   "special_instructions_caption", :default => "Special Instructions"
     t.boolean  "show_special_instructions",    :default => false
     t.integer  "import_id"
+    t.string   "uuid"
+  end
+
+  add_index "events", ["uuid"], :name => "index_events_on_uuid"
+
+  create_table "gateway_transactions", :force => true do |t|
+    t.string   "transaction_id"
+    t.boolean  "success"
+    t.integer  "service_fee"
+    t.integer  "amount"
+    t.string   "message"
+    t.text     "response"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   create_table "import_errors", :force => true do |t|
@@ -257,6 +292,7 @@ ActiveRecord::Schema.define(:version => 20130114212408) do
     t.integer  "lifetime_value",  :default => 0
     t.string   "salutation"
     t.boolean  "do_not_email",    :default => false
+    t.string   "title"
   end
 
   add_index "people", ["organization_id", "email"], :name => "index_people_on_organization_id_and_email"
@@ -316,10 +352,12 @@ ActiveRecord::Schema.define(:version => 20130114212408) do
     t.integer  "event_id"
     t.integer  "chart_id"
     t.integer  "organization_id"
+    t.string   "uuid"
   end
 
   add_index "shows", ["event_id"], :name => "index_shows_on_event_id"
   add_index "shows", ["organization_id"], :name => "index_shows_on_organization_id"
+  add_index "shows", ["uuid"], :name => "index_shows_on_uuid"
 
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"

@@ -5,10 +5,7 @@
 .row
   .span4
     %h3 1. Choose an Event
-    %ul.nav.nav-pills.nav-stacked#event-drilldown
-      - @events.each do |event|
-        %li{:class => @event && event.id == @event.id ? :active : :unselected }
-          = link_to event.name, params.merge({:event_id => event.id}), :title => 'event-name'
+    = select_tag "event_selector", options_for_select(@events.collect{ |e| [e.name, url_for(params.merge({:event_id => e.id, :show_id => nil, :section_id => nil}))] }, url_for(params.merge({:event_id => @event.try(:id), :show_id => nil, :section_id => nil}))), include_blank: true, class: "visit-on-select span4"
 
   .span4
     - unless @shows.nil?
@@ -16,74 +13,54 @@
       - if @shows.empty?
         %p Sorry, there are no upcoming shows with tickets available
       - else
-        %ul.nav.nav-pills.nav-stacked#show-drilldown
-          - @shows.each do |show|
-            %li{:class => @show && show.id == @show.id ? :active : :unselected }
-              = link_to l(show.datetime_local_to_event, :format => :short), params.merge({:show_id => show.id}), :title => 'show-datetime'
+        = select_tag "show_selector", options_for_select(@shows.collect{ |show| [l(show.datetime_local_to_event, :format => :short), url_for(params.merge({:show_id => show.id, :section_id => nil}))] }, url_for(params.merge({:show_id => @show.try(:id), :section_id => nil}))), include_blank: true, class: "visit-on-select span4"
 
   .span4
     - unless @show.nil?
       %h3 3. Choose a Ticket Type
-      %ul.nav.nav-pills.nav-stacked#section-drilldown
-        - @show.chart.sections.each do |section|
-          %li{:class => @section && section.id == @section.id ? :active : :unselected }
-            = link_to (truncate(section.name, :length => 20, :separator => ' ', :omission => '...') + ' ' + number_as_cents(section.price)), params.merge({:section_id => section.id}), :title => 'section-name'
+      = select_tag "section_selector", options_for_select(@show.chart.sections.collect{ |section| [(truncate(section.name, :length => 20, :separator => ' ', :omission => '...') + ' ' + number_as_cents(section.price)), url_for(params.merge({:section_id => section.id}))] }, url_for(params.merge({:section_id => @section.try(:id)}))), include_blank: true, class: "visit-on-select ticket-type-select span4"
 
-.row          
-  .span6
-    - unless @section.nil?
-      %h3 4. Select tickets
-      - if @tickets.empty?
-        %p Sorry, there are no tickets available in that section.
-      - else
-        %p="You are exchanging #{pluralize(params[:items].length, 'ticket')}, please select #{pluralize(params[:items].length, 'ticket')} below"
-        = form_tag '/exchanges' do
-          = hidden_field_tag :order_id, params[:order_id]
-          - params[:items].each do |item_id|
-            = hidden_field_tag "items[]", item_id
-          .controls
-            - @tickets.each do |ticket|
-              %label.checkbox
-                = check_box_tag "tickets[]", ticket.id, false, :id => "ticket_#{ticket.id}", :class => "checkbox ticket-control"
-                ="#{ticket.section.name}, #{number_as_cents ticket.price}"
-          %p
-            = submit_tag "Exchange these tickets", :class => "btn"
-            
-  .span6
-    - unless @section.nil?
-      #section-details
-        %h6 About this section
-        %table.table
-          %tr
-            %td Price
-            %td=number_as_cents @section.price
-          %tr
-            %td Total Tickets
-            %td=@section.summary.total
-          %tr
-            %td On Sale
-            %td= @section.summary.available
-          %tr
-            %td Sold
-            %td=@section.summary.sold
-          %tr
-            %td Comped
-            %td=@section.summary.comped
-      #show-details
-        %h6 About this show
-        %table.table
-          %tr
-            %td Potential Remaining
-            %td= number_as_cents(@show.glance.potential_remaining)
-          %tr
-            %td Original Potential
-            %td= number_as_cents(@show.glance.potential_original)
-          %tr
-            %td On Sale
-            %td= @show.glance.available_total
-          %tr
-            %td Sold
-            %td= @show.glance.sold_total
-          %tr
-            %td Comped
-            %td= @show.glance.comped_total
+- unless @section.nil?
+  = form_tag '/exchanges' do
+    = hidden_field_tag :order_id, params[:order_id]
+    = hidden_field_tag :show_id, params[:show_id]
+    = hidden_field_tag :section_id, params[:section_id]
+    - params[:items].each do |item_id|
+      = hidden_field_tag "items[]", item_id
+    #exchange-details.row
+      - unless @tickets.length < @items.length
+        .span3.offset2
+          .well
+            %ol.unstyled
+              - @items.each do |item|
+                %li
+                  %h6= item.show.event.name
+                  .lead=number_as_cents item.total_price
+                  = l(item.show.datetime_local_to_event, :format => :short)
+                  %br
+                  = item.product.section.name
+        #exchange-arrow.span2
+          %i.icon-arrow-right.icon-3x
+          - unless @section.nil?
+            = submit_tag "Confirm Exchange", :class => "btn btn-large btn-block btn-primary"
+        .span3
+          .well{class: ("negative" if @free_upgrade)}
+            %ol.unstyled
+              - @items.count.times do
+                %li
+                  %h6= @event.name
+                  .lead=number_as_cents @section.price
+                  = l(@section.show.datetime_local_to_event, :format => :short)
+                  %br
+                  = @section.name
+
+- content_for :custom_js do
+  :javascript
+    $(".visit-on-select").on("change", function(scope) {
+      window.open($(this).val(), "_self");
+    })
+
+  - if @tickets && (@tickets.length < @items.length)
+    :javascript
+      $('.ticket-type-select').popover({title: "Not Enough Tickets", content: "There aren't enough tickets in this ticket type to complete your exchange.  Please pick another show or ticket type.", placement: "bottom", trigger: "manual"});
+      $('.ticket-type-select').popover('show')

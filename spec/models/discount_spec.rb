@@ -34,6 +34,27 @@ describe Discount do
     FactoryGirl.build(:discount, code: "BETTERCALLKENNYLOGGINSBECAUSEYOUREINTHEDANGERZONE").save.should be_false
   end
 
+  describe "getting unique codes for an organization with #unique_codes_for" do
+    it "should return an empty array if there are no codes" do
+      Discount.unique_codes_for(FactoryGirl.create(:organization)).should be_empty
+    end
+
+    it "should return an array of codes across all events" do
+      o = FactoryGirl.create(:organization)
+      FactoryGirl.create(:discount, :code => "CODE1", :organization => o, :event => FactoryGirl.create(:event))
+      FactoryGirl.create(:discount, :code => "CODE2", :organization => o, :event => FactoryGirl.create(:event))
+      Discount.unique_codes_for(o).should eq ["CODE1", "CODE2"]
+    end
+
+    it "should return only unique codes" do
+      o = FactoryGirl.create(:organization)
+      FactoryGirl.create(:discount, :code => "CODE1", :organization => o, :event => FactoryGirl.create(:event))
+      FactoryGirl.create(:discount, :code => "CODE2", :organization => o, :event => FactoryGirl.create(:event))
+      FactoryGirl.create(:discount, :code => "CODE1", :organization => o, :event => FactoryGirl.create(:event))
+      Discount.unique_codes_for(o).should eq ["CODE1", "CODE2"]
+    end
+  end
+
   describe "before_destroy" do
     it "will be destroyed" do
       subject.save!

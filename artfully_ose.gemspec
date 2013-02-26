@@ -14,11 +14,13 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails", ">= 3.2.11"
+  s.add_dependency "rails", ">= 3.2.12"
   s.add_dependency "transitions", "0.0.11"
   s.add_dependency "devise", "=2.0.5"
   s.add_dependency "devise_invitable", "=1.0.2"
   s.add_dependency "devise_suspendable", "=0.6.1"
+
+  s.add_dependency "active_model_serializers", "=0.6.0"
   
   s.add_dependency "activemerchant"
   s.add_dependency "braintree", "~> 2.13.0"
@@ -28,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency "audited-activerecord", "~> 3.0"
   s.add_dependency "activerecord-import", "0.2.9"
   s.add_dependency "acts-as-taggable-on", "~>2.1.0"
-  s.add_dependency "haml"
+  s.add_dependency "haml", "~> 3.1"
 
   s.add_dependency "will_paginate", '~> 3.0'
   s.add_dependency "bootstrap-will_paginate"
@@ -47,7 +49,6 @@ Gem::Specification.new do |s|
   s.add_dependency "gibbon", "0.3.5"
   s.add_dependency "set_watch_for", "0.0.1"
   s.add_dependency "swiper", "0.0.1"
-  s.add_dependency "restful_metrics", "1.1.4"
   
   s.add_dependency "uuid", "2.3.5"
   s.add_dependency "geocoder"

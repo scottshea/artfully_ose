@@ -2,7 +2,7 @@ class Person < ActiveRecord::Base
   include Valuation::LifetimeValue
   include Valuation::LifetimeDonations
 
-  attr_accessor :skip_sync_to_mailchimp
+  attr_accessor :skip_sync_to_mailchimp, :skip_commit
   attr_accessible :type, :email, :salutation, :title, :dummy, :first_name, :last_name, :company_name, :website, :twitter_handle, :linked_in_url, :facebook_url, :person_type
   attr_accessible :subscribed_lists, :do_not_email, :skip_sync_to_mailchimp
   attr_accessible :organization_id

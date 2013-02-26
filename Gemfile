@@ -35,6 +35,7 @@ group :test, :development do
   gem 'launchy'
   gem 'awesome_print', :require => 'ap'
   gem 'wirble'
+  gem 'letter_opener'
 end
 
 group :pg do

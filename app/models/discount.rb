@@ -38,6 +38,14 @@ class Discount < ActiveRecord::Base
     self.organization ||= self.event.try(:organization)
   end
 
+  #
+  # Returns an array of the unique codes (not the discount objects, but the actual strings)
+  # that this organization is using
+  #
+  def self.unique_codes_for(organization)
+    Discount.where(:organization_id => organization.id).pluck(:code).uniq
+  end
+
   def apply_discount_to_cart(cart=nil)
     @cart ||= cart unless cart.nil?
     transaction do

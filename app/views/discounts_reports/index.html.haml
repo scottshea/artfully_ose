@@ -3,7 +3,7 @@
 
 = form_tag discounts_reports_path, :method => :get, :class => 'well form-inline' do
   = label_tag :code, "Code", :class => "control-label"
-  = select_tag :code, options_for_select(@codes.map(&:code) << Discount::ALL_DISCOUNTS_STRING, @report.try(:discount_code))
+  = select_tag :code, options_for_select(@codes << Discount::ALL_DISCOUNTS_STRING, @report.try(:discount_code))
 
   = label_tag :start_date, "From", :class => "control-label"
   = text_field_tag :start_date, @start_date, :readonly => true, :class => 'datepicker input-small'

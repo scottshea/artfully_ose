@@ -1,5 +1,6 @@
 class Kit < ActiveRecord::Base
   include ActiveRecord::Transitions
+  include Ext::Integrations::Kit
   default_scope :order => 'created_at DESC'
   belongs_to :organization
   validates_presence_of :organization
@@ -10,7 +11,7 @@ class Kit < ActiveRecord::Base
     where(Kit.arel_table[:state].eq("activated").or(Kit.arel_table[:state].eq('pending')))
   end
 
-  def self.acts_as_kit(options, &block)
+  def self.acts_as_kit(options = {}, &block)
     self.requires_approval = options.delete(:with_approval) || false
     self.restricted_to_admins = options.delete(:admin_only) || false
 
@@ -20,8 +21,8 @@ class Kit < ActiveRecord::Base
       state :activated, :enter => :on_activation
       state :cancelled
 
-      event(:activate)   { transitions :from => [:fresh, :pending], :to => :activated, :guard => :activatable? }
-      event(:approve)    { transitions :from => :pending, :to => :activated, :guard => :approvable? }
+      event(:activate, :success => :record_activation)   { transitions :from => [:fresh, :pending], :to => :activated, :guard => :activatable? }
+      event(:approve, :success => :record_approval)    { transitions :from => :pending, :to => :activated, :guard => :approvable? }
       event(:cancel)     { transitions :from => [:activated, :pending, :rejected ], :to => :cancelled }
       event(:reactivate) { transitions :from => :cancelled, :to => :activated, :guard => :activatable? }
       event(:activate_without_pending) { transitions :from => [:fresh, :pending, :cancelled], :to => :activated }

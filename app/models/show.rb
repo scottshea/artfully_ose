@@ -3,6 +3,7 @@ class Show < ActiveRecord::Base
   include Ticket::Reporting
   include ActiveRecord::Transitions
   include Ext::Resellable::Show
+  include Ext::Integrations::Show
   include Ext::Uuid
 
   attr_accessible :datetime, :event_id, :chart_id, :organization_id, :old_mongo_id
@@ -49,7 +50,7 @@ class Show < ActiveRecord::Base
     state :unpublished
 
     event(:build)     { transitions :from => :pending, :to => :built }
-    event(:publish)   { transitions :from => [ :built, :unpublished ], :to => :published }
+    event(:publish, :success => :record_publish)   { transitions :from => [ :built, :unpublished ], :to => :published }
     event(:unpublish) { transitions :from => [ :built, :published ], :to => :unpublished }
   end
 

@@ -160,15 +160,6 @@ describe Cart do
     end
   end
 
-  describe "#finish" do
-    subject { FactoryGirl.build(:cart_with_items) }
-
-    it "should send a metric" do
-      RestfulMetrics::Client.should_receive(:add_compound_metric)
-      subject.finish
-    end
-  end
-
   describe "organizations" do
     it "includes the organizations for the included donations" do
       donation = FactoryGirl.build(:donation)

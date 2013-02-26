@@ -1,3 +1,19 @@
+###
+#
+# Statement uses items from a show to calculate things like gross, net, and
+# cut the data up into various sections.  The reason we don't use tickets is:
+# 
+# * Item is the table of record for revenue
+# * a Ticket can have many items (refunds, exchanges, etc...) It's awkward (and db intensive)
+#   to get the sold_item for a ticket
+#
+# The downside is that this approach requires a bit of hoop jumping in Row (see if, elsif, else block)
+# which is indeed ugly.
+# 
+# Ticket sometimes feels more natrual, and I often considering refactoring this.  But in the end the db queries are too high
+# and Item is easier and more flexible to use.
+#
+###
 class Statement  
   attr_accessor :datetime, 
                 :tickets_sold, 
@@ -64,8 +80,7 @@ class Statement
       # ORDER LOCATION
       #  
       order_location_hash         = show.items.group_by do |item| 
-        order = item.order
-        order.parent.nil? ? order.location : order.parent.location 
+        item.order.original_order.location 
       end
       
       statement.order_location_rows = {}

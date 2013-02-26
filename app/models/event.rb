@@ -95,7 +95,7 @@ class Event < ActiveRecord::Base
   end
 
   def upcoming_shows(limit = 5)
-    upcoming = shows.select { |show| show.datetime_local_to_event > (DateTime.now - 1.hours) }
+    upcoming = shows.includes(:event => :venue).select { |show| show.datetime_local_to_event > (DateTime.now - 1.hours) }
     return upcoming if limit == :all
     upcoming.take(limit)
   end
