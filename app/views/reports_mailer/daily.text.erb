@@ -1,6 +1,3 @@
 Your Daily Report for <%= @date.to_s(:long) %>.
 
-<% @orders.each do |order| %>
-  #<%= order.id %> - <%= pluralize order.tickets.count, "ticket" %> - <%= number_to_currency(order.total.to_f/100) %>
-  <%= order_url(order) %>
-<%- end %>
+<%= @report.to_a.to_table(first_row_is_head: true, last_row_is_foot: true) %>

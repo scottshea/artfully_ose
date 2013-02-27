@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
   s.add_dependency "aws-sdk"
   s.add_dependency "paperclip", '>= 2.5.0'
   s.add_dependency "comma", '3.0.3'
+  s.add_dependency "text-table", '1.2.2'
   
   s.add_dependency "s3", '>= 0.3.11'
   s.add_dependency "validates_timeliness"
