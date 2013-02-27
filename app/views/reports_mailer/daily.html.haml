@@ -1,0 +1,15 @@
+%h2 Your Daily Order Report
+%h1= @date.to_s(:long)
+
+%table
+  %tr
+    %th Order #
+    %th Tickets
+    %th Total
+    %th Customer
+  - @orders.each do |order|
+    %tr
+      %td{:style=>"text-align: right;"}= link_to order.id, order_url(order)
+      %td{:style=>"text-align: right;"}= order.tickets.count
+      %td{:style=>"text-align: right;"}= number_to_currency(order.total.to_f/100)
+      %td= order.person
