@@ -1,5 +1,5 @@
 class DailyReport
-  attr_accessor :rows, :daily_total
+  attr_accessor :rows, :daily_total, :date, :organization
   extend ::ArtfullyOseHelper
 
   def initialize(organization, date=nil)

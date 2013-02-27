@@ -4,10 +4,8 @@ class ReportsMailer < ActionMailer::Base
   add_template_helper(ApplicationHelper)
   add_template_helper(ArtfullyOseHelper)
 
-  def daily(org, date=nil)
-    @date = date || 1.day.ago.to_date
-    @report = DailyReport.new(org, @date)
-
-    mail to: org.email, subject: "Daily Artful.ly Report for #{@date.to_s(:long)}"
+  def daily(report)
+    @report = report
+    mail to: @report.organization.email, subject: "Daily Artful.ly Report for #{@report.date.to_s(:long)}"
   end
 end
