@@ -18,7 +18,7 @@ class DailyReport
   end
 
   def header
-    ["Order ID", "Total", "Customer", "Details"]
+    ["Order ID", "Total", "Customer", "Details", "Special Instructions"]
   end
 
   def to_a
@@ -26,21 +26,22 @@ class DailyReport
   end
 
   def footer
-    ["Daily Total:", daily_total, "", ""]
+    ["Daily Total:", daily_total, "", "", ""]
   end
 
   class Row
-    attr_accessor :id, :ticket_details, :total, :person, :person_id
+    attr_accessor :id, :ticket_details, :total, :person, :person_id, :special_instructions
     def initialize(order)
       @id = order.id
       @ticket_details = order.ticket_details
       @total = DailyReport.number_to_currency(order.total.to_f/100)
       @person = order.person
       @person_id = order.person.id
+      @special_instructions = order.special_instructions
     end
 
     def to_a
-      [id, total, person, ticket_details]
+      [id, total, person, ticket_details, special_instructions]
     end
   end
 end
