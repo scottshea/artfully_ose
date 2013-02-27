@@ -1,20 +1,23 @@
 %h2 Your Daily Order Report
-%h1= @date.to_s(:long)
+%h1= @report.date.to_s(:long)
 
-%table
-  %tr
-    %th Order #
-    %th Total
-    %th Customer
-    %th Details
-    %th Special Instructions
-  - @report.rows.each do |row|
+- if ! @report.rows.empty?
+  %table
     %tr
-      %td{:style=>"text-align: right;"}= link_to row.id, order_url(id: row.id)
-      %td{:style=>"text-align: right;"}= row.total
-      %td= link_to row.person, person_url(id: row.person_id)
-      %td= row.ticket_details
-      %td= row.special_instructions
+      %th Order #
+      %th Total
+      %th Customer
+      %th Details
+      %th Special Instructions
+    - @report.rows.each do |row|
+      %tr
+        %td{:style=>"text-align: right;"}= link_to row.id, order_url(id: row.id)
+        %td{:style=>"text-align: right;"}= row.total
+        %td= link_to row.person, person_url(id: row.person_id)
+        %td= row.ticket_details
+        %td= row.special_instructions
+- else
+  %p There were no orders placed.
 
 %h3 
   Daily Total:
