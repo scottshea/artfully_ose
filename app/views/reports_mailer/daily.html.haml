@@ -1,24 +1,58 @@
 %h2 Your Daily Order Report
-%h1= @report.date.to_s(:long)
+%h1= @tix.date.to_s(:long)
 
-- if ! @report.rows.empty?
+- if ! @tix.rows.empty?
+  %h3 Tickets
   %table
     %tr
       %th Order #
       %th Total
       %th Customer
       %th Details
-      %th Special Instructions
-    - @report.rows.each do |row|
+      %th.last-child Special Instructions
+    - @tix.rows.each do |row|
       %tr
-        %td{:style=>"text-align: right;"}= link_to row.id, order_url(id: row.id)
-        %td{:style=>"text-align: right;"}= row.total
+        %td.right= link_to row.id, order_url(id: row.id)
+        %td.right= row.total
         %td= link_to row.person, person_url(id: row.person_id)
         %td= row.ticket_details
-        %td= row.special_instructions
+        %td.last-child= row.special_instructions
 - else
   %p There were no orders placed.
 
+- if ! @donations.rows.empty?
+  %h3 Donations
+  %table
+    %tr
+      %th Order #
+      %th Donation
+      %th.last-child Customer
+    - @donations.rows.each do |row|
+      %tr
+        %td.right= link_to row.id, order_url(id: row.id)
+        %td.right= row.total
+        %td.last-child= link_to row.person, person_url(id: row.person_id)
+  %h4
+    Donation Total:
+    = @donations.total
+- else
+  %p There were no donations made.
+
 %h3 
   Daily Total:
-  = @report.daily_total
+  = @tix.daily_total
+
+:css
+  .right {
+    text-align: right;
+  }
+  table th {
+    text-align: left;
+  }
+  table td, table th {
+    border-right: 1px solid #999;
+    padding: 8px;
+  }
+  table .last-child {
+    border: none;
+  }

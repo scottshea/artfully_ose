@@ -1,9 +1,15 @@
-Your Daily Report for <%= @report.date.to_s(:long) %>.
+Your Daily Report for <%= @tix.date.to_s(:long) %>.
 
-<% if ! @report.rows.empty? %>
-  <%= @report.to_a.to_table(first_row_is_head: true, last_row_is_foot: true) %>
+<% if ! @tix.rows.empty? %>
+<%= @tix.to_a.to_table(first_row_is_head: true, last_row_is_foot: true) %>
 <% else %>
-  There were no orders placed.
+There were no orders placed.
+<% end %>
+
+<% if ! @donations.rows.empty? %>
+<%= @donations.to_a.to_table(first_row_is_head: true, last_row_is_foot: true) %>
+<% else %>
+There were no donations made.
 <% end %>
 
 View this email in an HTML-capable email reader for links to the aforementioned orders.

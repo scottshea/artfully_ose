@@ -1,4 +1,4 @@
-class DailyReport
+class DailyTicketReport
   attr_accessor :rows, :daily_total, :date, :organization
   extend ::ArtfullyOseHelper
 
@@ -14,7 +14,7 @@ class DailyReport
   end
 
   def daily_total
-    DailyReport.number_to_currency(@orders.sum(&:total).to_f/100)
+    DailyTicketReport.number_to_currency(@orders.sum(&:total).to_f/100)
   end
 
   def header
@@ -22,7 +22,7 @@ class DailyReport
   end
 
   def to_a
-    [header] << @rows.collect {|row| row.to_a} << [footer]
+    [header] + @rows.collect {|row| row.to_a.flatten(1)} << footer
   end
 
   def footer
@@ -34,7 +34,7 @@ class DailyReport
     def initialize(order)
       @id = order.id
       @ticket_details = order.ticket_details
-      @total = DailyReport.number_to_currency(order.total.to_f/100)
+      @total = DailyTicketReport.number_to_currency(order.total.to_f/100)
       @person = order.person
       @person_id = order.person.id
       @special_instructions = order.special_instructions
