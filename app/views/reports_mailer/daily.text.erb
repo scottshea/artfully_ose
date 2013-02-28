@@ -8,7 +8,7 @@ There were no orders placed.
 
 <% if ! @donations.rows.empty? %>
 <%= @donations.to_a.to_table(first_row_is_head: true, last_row_is_foot: true) %>
-<% else %>
+<% elsif @donations.organization.has_kit?("RegularDonationKit") %>
 There were no donations made.
 <% end %>
 

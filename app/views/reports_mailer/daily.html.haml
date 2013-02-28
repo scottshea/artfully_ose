@@ -35,7 +35,7 @@
   %h4
     Donation Total:
     = @donations.total
-- else
+- elsif @donations.organization.has_kit?("RegularDonationKit")
   %p There were no donations made.
 
 %h3 
