@@ -13,6 +13,10 @@ class DailyTicketReport
     end
   end
 
+  def total
+    DailyTicketReport.number_to_currency(@orders.sum{|o| o.tickets.sum(&:total_price)}.to_f/100)
+  end
+
   def daily_total
     DailyTicketReport.number_to_currency(@orders.sum(&:total).to_f/100)
   end
@@ -26,7 +30,7 @@ class DailyTicketReport
   end
 
   def footer
-    ["Daily Total:", daily_total, "", "", ""]
+    ["Total:", total, "", "", ""]
   end
 
   class Row
@@ -34,7 +38,7 @@ class DailyTicketReport
     def initialize(order)
       @id = order.id
       @ticket_details = order.ticket_details
-      @total = DailyTicketReport.number_to_currency(order.total.to_f/100)
+      @total = DailyTicketReport.number_to_currency(order.tickets.sum(&:total_price).to_f/100)
       @person = order.person
       @person_id = order.person.id
       @special_instructions = order.special_instructions

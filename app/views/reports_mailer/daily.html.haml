@@ -19,6 +19,9 @@
         %td= link_to row.person, person_url(id: row.person_id)
         %td= row.ticket_details
         %td.last-child= row.special_instructions
+  %h4
+    Ticket Total:
+    = @tix.total
 - else
   %p There were no orders placed.
 
@@ -40,7 +43,7 @@
 - elsif @donations.organization.has_kit?("RegularDonationKit")
   %p There were no donations made.
 
-%h3 
+%h2
   Daily Total:
   = @tix.daily_total
 
