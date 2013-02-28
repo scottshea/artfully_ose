@@ -1,4 +1,5 @@
-Your Daily Report for <%= @tix.date.to_s(:long) %>.
+Your Daily Order Report for <%= @tix.organization.name %>.
+<%= @tix.date.to_s(:long) %>
 
 <% if ! @tix.rows.empty? %>
 <%= @tix.to_a.to_table(first_row_is_head: true, last_row_is_foot: true) %>

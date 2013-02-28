@@ -1,4 +1,6 @@
-%h2 Your Daily Order Report
+%h2
+  Your Daily Order Report for
+  = @tix.organization.name
 %h1= @tix.date.to_s(:long)
 
 - if ! @tix.rows.empty?
