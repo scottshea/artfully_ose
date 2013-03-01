@@ -47,6 +47,10 @@
   Daily Total:
   = @tix.daily_total
 
+%small
+  To turn off this daily email report, 
+  = link_to "edit your organization here.", edit_organization_url(@tix.organization)
+
 :css
   .right {
     text-align: right;
