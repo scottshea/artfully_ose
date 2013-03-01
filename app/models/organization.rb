@@ -3,7 +3,7 @@ class Organization < ActiveRecord::Base
   include Ext::Resellable::Organization
   include Ext::Integrations::Organization
   
-  attr_accessible :name, :time_zone, :ein, :legal_organization_name, :email
+  attr_accessible :name, :time_zone, :ein, :legal_organization_name, :email, :receive_daily_sales_report
   
   has_many :events
   has_many :charts
@@ -27,6 +27,8 @@ class Organization < ActiveRecord::Base
   validates_presence_of :name, :email
   validates :ein, :presence => true, :if => :updating_tax_info
   validates :legal_organization_name, :presence => true, :if => :updating_tax_info
+
+  scope :receiving_sales_email, where(:receive_daily_sales_report => true)
 
   #
   # We aren't interested in FAFS donations, so override lifetime_orders
