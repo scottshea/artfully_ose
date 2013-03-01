@@ -31,11 +31,7 @@ We prefer using subtrees to make changes to the ArtfullyOSE Rails Engine, and co
 
 ### Pull changes from lib/artfully_ose out to ArtfullyOSE.
 
-    git subtree push --prefix=lib/artfully_ose ose master
-
-### Prepare local changes in lib/artfully_ose to be pushed out to ArtfullyOSE.
-
-    git subtree split --prefix=lib/artfully_ose --rejoin
+    git subtree pull --prefix=lib/artfully_ose ose master
 
 ### Push changes from lib/artfully_ose out to ArtfullyOSE.
 
