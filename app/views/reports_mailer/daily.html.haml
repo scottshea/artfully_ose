@@ -40,7 +40,7 @@
   %h4
     Donation Total:
     = @donations.total
-- elsif @donations.organization.has_kit?("RegularDonationKit")
+- else
   %p There were no donations made.
 
 %h2
@@ -48,7 +48,7 @@
   = @tix.daily_total
 
 %small
-  To turn off this daily email report, 
+  To turn off this daily email report,
   = link_to "edit your organization here.", edit_organization_url(@tix.organization)
 
 :css

@@ -7,6 +7,6 @@ class ReportsMailer < ActionMailer::Base
   def daily(tix, donations)
     @tix = tix
     @donations = donations
-    mail to: @tix.organization.owner.email, subject: "Daily Artful.ly Report for #{@tix.date.to_s(:long)}"
+    mail to: @tix.organization.owner.email, subject: "Daily Report for #{@tix.date.to_s(:long)}"
   end
 end
