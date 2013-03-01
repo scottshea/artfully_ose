@@ -4,5 +4,5 @@
 
 = render "shared/error_messages", :target => @organization
 = form_for @organization do |form|
-  %ul= render :partial => 'organizations/form', :locals => { :form => form }
+  = render :partial => 'organizations/form', :locals => { :form => form }
   = form.submit "Update", :class => 'btn'

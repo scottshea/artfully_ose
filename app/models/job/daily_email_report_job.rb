@@ -1,6 +1,6 @@
 class DailyEmailReportJob
   def self.perform
-    Organization.all.each do |org|
+    Organization.receiving_sales_email.includes(:orders => [:person, :items]).each do |org|
       tickets = DailyTicketReport.new(org)
       donations = DailyDonationReport.new(org)
       next if tickets.rows.empty?
