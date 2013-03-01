@@ -1,0 +1,13 @@
+- unless events.blank?
+  %ul#event-list.row-fluid
+    - events.each do |event|
+      %li.span6.row-fluid.event-list-item{:style => "margin-left: 0px; margin-right:10px'"}
+        .span12
+          .row-fluid
+            .span4.event-icon-container
+              = render :partial => 'shared/event_image_icon', :locals => { :event => event }
+            .span8
+              %h4= link_to event.name, event_path(event), :title => 'event-name'
+              %ul.mini-stats
+                %li= "#{number_as_cents(event.glance.sales_played)} total played"
+                %li= "#{number_as_cents(event.glance.sales_advance)} advance sales"

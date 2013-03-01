@@ -1,0 +1,15 @@
+/*
+ *= require_self
+ */
+
+.navbar, .footer {
+    display:none;
+}
+
+ul {
+  list-style: none;
+}
+
+.modal {
+  display: none;
+}

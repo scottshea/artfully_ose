@@ -1,0 +1,42 @@
+- in_section :people
+- content_for :header do
+  %h1 Refund Tickets
+
+.row
+  .span8.offset2
+    = form_tag refunds_path do
+
+      = hidden_field_tag :order_id, @order.id
+
+      - @items.each do |item|
+        = hidden_field_tag "items[]", item.id
+
+      %table.table
+        %thead
+          %tr
+            %th
+              Event
+            %th
+              Show
+            %th
+              Price
+            %th
+              Sold
+        - @items.each do |item|
+          - if item.ticket?
+            %tr
+              %td=item.product.show.event.name
+              %td=l item.product.show.datetime_local_to_event, :format => :short
+              %td=number_as_cents item.product.price
+              %td=number_as_cents item.price
+
+      %p
+        Refund these tickets and return them to inventory
+        %br
+        = submit_tag "Issue Refund and Return", :class => "btn"
+      %p
+        %br
+      %p
+        Refund these tickets and keep the tickets out of inventory.
+        %br
+        = submit_tag "Issue Refund", :class => "btn"

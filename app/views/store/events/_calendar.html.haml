@@ -1,0 +1,14 @@
+- dates = @event.upcoming_public_shows.collect(&:datetime_local_to_event).reject {|d| d < Time.zone.now }.map {|d| d.to_date}
+- dates_by_month = dates.group_by {|d| d.strftime("%B %Y")}
+
+-dates_by_month.each do |month, dates|
+  .calendar-month
+    %h3
+      = month
+    %table.calendar{:align => "center"}
+      - (dates.first.beginning_of_month.to_date..dates.first.end_of_month.to_date).each do |date|
+        = "<tr>".html_safe if date == dates.first.beginning_of_month.to_date || date.wday == 0
+        = Array.new(date.wday, "<td class='filler'></td>").join('').html_safe if date == dates.first.beginning_of_month.to_date && dates.first.beginning_of_month.to_date.wday != 0
+
+        = "<td class='#{dates.include?(date) ? "has_show" : ""}' data-date='#{date.strftime('%D')}'>#{date.strftime('%e')}</td>".html_safe
+        = "</tr>".html_safe if date.cwday == 6

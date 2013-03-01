@@ -1,0 +1,50 @@
+.fields.section-fields
+  .control-group
+    =f.label :name, "Name", :class => 'control-label'
+    .controls
+      =f.text_field :name
+      
+  .control-group
+    =f.label :description, "Description", :class => 'control-label'
+    .controls
+      =f.text_area :description, :size => '10x5'
+  -no_editing = false if no_editing.nil?
+  - unless no_editing
+    .control-group
+      =f.label :price, "Price", :class => 'control-label'
+      .controls
+        .input-prepend
+          %span.add-on $
+          - if can? :create, :paid_events
+            =f.text_field :price, :placeholder => '0.00', :class => 'input-small section-price', :value => number_as_cents(f.object.price, :format => "%n")
+          - else
+            %span.section-price-disabled{'data-toggle' => "modal", 'data-target' => "#request-paid-ticket-kit"}
+              =f.text_field :price, :placeholder => '0.00', :class => 'input-small disabled section-price-disabled', :value => number_as_cents(f.object.price, :format => "%n"), :disabled => 'disabled'
+              %p
+                %a{:href=>"#"} Paid Ticketing Kit not enabled.
+
+
+    .control-group
+      =f.label :capacity, "Capacity", :class => 'control-label'
+      .controls
+        =f.text_field :capacity, :class => 'span1', :disabled => no_editing
+  
+  .control-group
+    =f.label :availablity, "Availablity", :class => 'control-label'
+    
+    - Section.new.channels.each do |channel, icon|
+      .controls
+        =f.check_box channel
+        =channel_checkbox channel
+  
+  .control-group
+    .controls
+      - show_remove_links = true if show_remove_links.nil?
+      - if show_remove_links
+        %span.remove-fields-link
+          = f.hidden_field :_destroy
+          %i.icon-minus-sign.icon-gray
+          = link_to_remove_fields "remove", f
+
+:javascript
+  $('.help').popover()

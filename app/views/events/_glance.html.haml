@@ -1,0 +1,37 @@
+- if controller.controller_name == "events" && controller.action_name == "show"
+  %h3 Event Overview
+- else
+  %h3 "At a Glance"
+- if report.nil?
+  %p Report not yet available.
+- else
+  %table.table.table-condensed
+    %tbody
+      %tr
+        %td On Sale
+        %td= report.available_total
+        %td
+      %tr
+        %td Comped
+        %td= report.comped_total
+        %td
+      %tr
+        %td Sold
+        %td= report.sold_total
+        %td= number_as_cents(report.sales_total)
+      %tr
+        %td Sold Today
+        %td= report.sold_today
+        %td= number_as_cents(report.sales_today)
+      %tr
+        %td Total Played
+        %td= report.sold_played
+        %td= number_as_cents(report.sales_played)
+      %tr
+        %td Potential Remaining
+        %td
+        %td= number_as_cents(report.potential_remaining)
+      %tr
+        %td Original Potential
+        %td
+        %td= number_as_cents(report.potential_original)

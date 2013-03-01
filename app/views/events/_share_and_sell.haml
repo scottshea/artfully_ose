@@ -1,0 +1,5 @@
+%li.accordian{:class => active?(:share)}
+  = link_to 'Share & Sell', storefront_link_event_path(event)
+  %ul.accordian-menu
+    = active_link_to 'Storefront', storefront_link_event_path(event)
+    = active_link_to 'Discounts', event_discounts_path(@event)
