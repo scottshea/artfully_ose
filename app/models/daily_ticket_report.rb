@@ -14,7 +14,7 @@ class DailyTicketReport
   end
 
   def total
-    DailyTicketReport.number_to_currency(@orders.sum{|o| o.tickets.sum(&:total_price)}.to_f/100)
+    DailyTicketReport.number_to_currency(@orders.sum{|o| o.tickets.sum(&:price)}.to_f/100)
   end
 
   def daily_total
@@ -38,7 +38,7 @@ class DailyTicketReport
     def initialize(order)
       @id = order.id
       @ticket_details = order.ticket_details
-      @total = DailyTicketReport.number_to_currency(order.tickets.sum(&:total_price).to_f/100)
+      @total = DailyTicketReport.number_to_currency(order.tickets.sum(&:price).to_f/100)
       @person = order.person
       @person_id = order.person.id
       @special_instructions = order.special_instructions
