@@ -304,7 +304,7 @@ function checkout() {
         $('#nav li').removeClass('active');
         $('.tab-pane').hide();
         $('.tab-pane#result').show();
-        $('.tab-pane#result').html("<h4>Your payment did not go through.</h4><p>" + data.responseText + ".</p>");
+        $('.tab-pane#result').html("<h4>Your payment did not go through.</h4><p>" + data.responseText + "</p>");
         $('#complete-purchase').removeClass('disabled');
       }
     });

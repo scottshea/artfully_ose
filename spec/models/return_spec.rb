@@ -11,6 +11,12 @@ describe Return do
       subject.items.each { |item| item.should_receive(:return!) }
       subject.submit
     end
+
+    it "returns false if the tickets can't be returned" do
+      subject.items.each { |item| item.stub(:return!).and_raise(Transitions::InvalidTransition) }
+      subject = Return.new(order, items)
+      subject.submit.should be_false
+    end
   end
 
   describe "successful?" do

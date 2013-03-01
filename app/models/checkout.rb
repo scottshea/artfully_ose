@@ -19,7 +19,7 @@ class Checkout
     message = message[0].upcase + message[1..message.length] unless message.blank? #capitalize first word
     
     if message.blank?
-      message = "We had a problem validating your payment.  Wait a few moments and try again or contact us to complete your purchase"
+      message = "We had a problem validating your payment.  Wait a few moments and try again or contact us to complete your purchase."
     end
     
     message

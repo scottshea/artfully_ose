@@ -1,6 +1,6 @@
 class Refund
   include Adjustments
-  attr_accessor :order, :refund_order, :items, :gateway_error_message
+  attr_accessor :order, :refund_order, :items, :message
 
   BRAINTREE_UNSETTLED_MESSAGE = "Cannot refund a transaction unless it is settled. (91506)"
   FRIENDLY_UNSETTLED_MESSAGE = "The processor cannot refund that transaction yet. Please try again in a few hours."
@@ -13,9 +13,16 @@ class Refund
   def submit(options = {})
     return_items_to_inventory = options[:and_return] || false
 
+    items.each do |i|
+      unless i.refundable?
+        @message = "Those items have already been refunded."
+        return
+      end
+    end
+
     @payment = Payment.create(@order.payment_method)
     @success = @payment.refund(refund_amount, order.transaction_id, options.merge({:service_fee => service_fee}))
-    @gateway_error_message = format_message(@payment)
+    @message = format_message(@payment)
     
     if @success
       items.each { |i| i.return!(return_items_to_inventory) }

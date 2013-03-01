@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   s.add_dependency "delayed_job_active_record", "=0.3.2"
   s.add_dependency "audited-activerecord", "~> 3.0"
   s.add_dependency "activerecord-import", "0.2.9"
-  s.add_dependency "acts-as-taggable-on", "~>2.1.0"
+  s.add_dependency "acts-as-taggable-on", "~>2.3.3"
   s.add_dependency "haml", "~> 3.1"
 
   s.add_dependency "will_paginate", '~> 3.0'

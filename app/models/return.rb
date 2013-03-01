@@ -8,6 +8,8 @@ class Return
 
   def submit
     @success = items.map(&:return!).reduce(&:&)
+  rescue Transitions::InvalidTransition
+    @success = false
   end
 
   def successful?

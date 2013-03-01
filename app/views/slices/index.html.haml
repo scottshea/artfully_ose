@@ -25,15 +25,15 @@
   .span2
     .well
       .stat.bottom-room
-        .center.headline-stat=@tickets_sold
+        .center.headline-stat=@total_tickets
         .center.headline-caption
-          %h6 TICKETS SOLD
+          %h6 TICKETS
       .stat.bottom-room
-        .center.headline-stat#tickets-stat
+        .center.headline-stat#tickets-stat="--"
         .center.headline-caption
           %h6 TICKETS IN SLICE
       .stat.bottom-room
-        .center.headline-stat#tickets-pct
+        .center.headline-stat#tickets-pct="--"
         .center.headline-caption
           %h6 PCT OF SLICE
   .span10

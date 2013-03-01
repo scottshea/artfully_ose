@@ -30,6 +30,7 @@
               .span10
                 =link_to_person (action.person)
                 =action.sentence
+                .muted="#{time_ago_in_words(action.occurred_at)} ago"
 
   .span8
     %section

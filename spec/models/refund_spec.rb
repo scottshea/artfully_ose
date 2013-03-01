@@ -54,6 +54,7 @@ describe Refund do
   describe "when refunding free items" do    
     it "should not contact braintree if only free items are being refunded" do
       free_refund = Refund.new(order, free_items)
+      free_refund.items.each { |i| i.should_receive(:refundable?).and_return(true)}
       free_refund.items.each { |i| i.should_receive(:return!).with(false).and_return(true) }
       free_refund.items.each { |i| i.stub(:refund!) }
       free_refund.refund_amount.should eq 0
@@ -102,6 +103,7 @@ describe Refund do
     
     it "should not contact Braintree" do
       free_refund = Refund.new(@free_order, free_items)
+      free_refund.items.each { |i| i.should_receive(:refundable?).and_return(true)}
       free_refund.refund_amount.should eq 0
       gateway.should_not_receive(:refund)
       free_refund.submit
@@ -110,6 +112,7 @@ describe Refund do
     
     it "should have an amount of 0" do
       free_refund = Refund.new(@free_order, free_items)
+      free_refund.items.each { |i| i.should_receive(:refundable?).and_return(true)}
       free_refund.refund_amount.should eq 0
       gateway.should_not_receive(:refund)
       free_refund.submit

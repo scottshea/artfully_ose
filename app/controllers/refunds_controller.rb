@@ -18,10 +18,10 @@ class RefundsController < ArtfullyOseController
         flash[:notice] = "Successfully refunded #{@refund.items.size} items."
       end
     else
-      if @refund.gateway_error_message.nil?
+      if @refund.message.nil?
         flash[:error] = "Unable to refund items.  Please contact support and we'll try to help!"
       else
-        flash[:error] = "Unable to refund items: " + @refund.gateway_error_message
+        flash[:error] = "Unable to refund items: " + @refund.message
       end
     end
 

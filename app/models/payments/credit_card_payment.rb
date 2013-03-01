@@ -79,13 +79,10 @@ class CreditCardPayment < ::Payment
   
   #purchase submits for auth and passes a flag to merchant to settle immediately
   def purchase(options={})
-    ::Rails.logger.debug("Sending purchase request to Braintree")
     response = gateway.purchase(self.amount, credit_card, options.except(:service_fee))
     record_gateway_transaction(options[:service_fee], self.amount, response)
-    ::Rails.logger.debug("Received response: #{response.message}")
-    ::Rails.logger.debug(response.inspect)
     self.transaction_id = response.authorization
-    self.errors.add(:base, response.message) unless response.message.blank?
+    self.errors.add(:base, BRAINTREE_REJECT_MESSAGE_MAPPING[response.message]) unless response.message.blank?
     response.success?
     
     rescue Errno::ECONNREFUSED => e

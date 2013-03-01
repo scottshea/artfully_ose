@@ -173,7 +173,7 @@ class Order < ActiveRecord::Base
   end
 
   def returnable_items
-    items.select { |i| i.returnable? and not i.refundable? }
+    items.select { |i| i.returnable? and i.comped? and not i.refundable? }
   end
 
   def num_tickets
@@ -204,7 +204,7 @@ class Order < ActiveRecord::Base
     unless discounts_used.empty?
       discount_string = ", used #{'discount'.pluralize(discounts_used.length)} " + discounts_used.join(",")
     end
-    pluralize(num_tickets, "ticket") + " to " + all_tickets.first.show.event.name + discount_string
+    Ticket.to_sentence(self.tickets.map(&:product)) + discount_string
   end
   
   def to_comp!
@@ -219,9 +219,6 @@ class Order < ActiveRecord::Base
 
   def donation_details
     if is_fafs?
-      # o = Organization.find(organization_id)
-      # fiscally_sponsored_project_details = o.fiscally_sponsored_project.nil? ? "" : " for the benefit of #{o.fiscally_sponsored_project.name}"
-      # "#{number_as_cents sum_donations} donation#{fiscally_sponsored_project_details}"
       "#{number_as_cents sum_donations} donation made through Fractured Atlas"
     else
       "#{number_as_cents sum_donations} donation"

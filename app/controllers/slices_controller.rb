@@ -16,7 +16,6 @@ class SlicesController < ArtfullyOseController
   # TODO TODO TODO
   # - Dollar amounts on ticket types
   # - Select all drop downs then de-select them
-  # - Publish to /artfully/opensource/slicer, d3 examples?
   #
 
   def data    
@@ -31,7 +30,7 @@ class SlicesController < ArtfullyOseController
 
   def load_statement
     @show = Show.includes(:event, :tickets => [:items => :order]).find(params[:statement_id])
-    @tickets_sold = @show.tickets.select{|t| t.sold?}.size
+    @total_tickets = @show.tickets.select{|t| t.sold?}.size + @show.tickets.select{|t| t.comped?}.size
     authorize! :view, @show.event
     @items = Item.includes(:product, :order, :show => :event).where(:show_id => params[:statement_id])
   end

@@ -39,8 +39,10 @@ class Organization < ActiveRecord::Base
   end
 
   #
-  # Good candidate to be added to acts_as_taggable_on
   # Returns Tag objects.  For an array of tag strings, call unique_tag_strings_for
+  #
+  # This has been supersceded by tags_on and tag_counts_on in acts_as_taggable_on
+  # But those methods have not been added to a release yet.
   #
   def tags_for(tagged_association)
     

@@ -14,5 +14,4 @@ class ReturnsController < ArtfullyOseController
 
     redirect_to order_url(order)
   end
-
 end

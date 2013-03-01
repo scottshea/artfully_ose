@@ -5,6 +5,7 @@ class Ticket < ActiveRecord::Base
   include Ticket::Pricing
   include Ticket::Transfers
   include Ticket::SaleTransitions
+  extend ActionView::Helpers::TextHelper
   
   attr_accessible :section_id, :section, :price, :venue, :cart_price
 
@@ -58,6 +59,12 @@ class Ticket < ActiveRecord::Base
 
   def self.unsold
     where(:state => [:off_sale, :on_sale])
+  end
+
+  def self.to_sentence(tickets)
+    shows_string = tickets.map(&:show).uniq.length > 1 ? ", multiple shows" : " on " + I18n.localize(tickets.first.show.datetime_local_to_event, :format => :day_time_at)
+    events_string = tickets.map(&:show).map(&:event).uniq.length > 1 ? "multiple events" : tickets.first.show.event.name + shows_string
+    pluralize(tickets.length, "ticket") + " to " + events_string
   end
 
   #
