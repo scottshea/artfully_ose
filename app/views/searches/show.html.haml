@@ -1,0 +1,33 @@
+- content_for :header do
+  %h1 Search
+- content_for :title do
+  Search
+
+.row
+  .span4
+    = render partial: "form", locals: {search: @search}
+  .span8.super-search-results
+    %h4.details-long= @search.description.html_safe
+    %table.table.people-list
+      - if @people.blank?
+        %h3 No results.
+      - else
+        - @people.each do |person|
+          = render partial: "person", locals: {person: person}
+    - if @people.present?
+      = will_paginate @people, :inner_window => 2, :outer_window => 0
+    .form-actions.row-fluid
+      .pull-left
+        %a.btn{"data-toggle" => "modal", :href => "#segment-modal"} Create List Segment
+        = link_to "Download CSV", search_path(@search, :format => :csv), :class => "btn"
+
+#segment-modal.modal
+  = form_for(@segment) do |form|
+    .modal-header
+      .close{"data-dismiss" => "modal"} ×
+      %h3 Create List Segment
+    .modal-body
+      = form.hidden_field :search_id, :value => @search.id
+      = form.text_field :name, :placeholder => "Name your list segment...", :required => "required"
+    .modal-footer
+      = form.submit "Save", :class => "btn"
