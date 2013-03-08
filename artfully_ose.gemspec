@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency "devise_suspendable", "=0.6.1"
 
   s.add_dependency "active_model_serializers", "=0.6.0"
+  s.add_dependency "exceptional", ">= 2.0.33"                               
   
   s.add_dependency "activemerchant"
   s.add_dependency "braintree", "~> 2.13.0"

@@ -166,6 +166,7 @@ class EventsImport < Import
     Rails.logger.info("Import #{id} EVENT_IMPORT: Ticket built [#{ticket.inspect}]")
     ticket.sell_to person
     Rails.logger.info("Import #{id} EVENT_IMPORT: Ticket sold to [#{person.inspect}]")
+    ticket.sold_price = amount
     ticket.save
     Rails.logger.info("Import #{id} EVENT_IMPORT: Ticket saved [#{ticket.inspect}]")
     ticket

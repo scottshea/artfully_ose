@@ -187,6 +187,7 @@ describe EventsImport do
       ticket = @import.create_ticket(@parsed_row, @person, @event, @show, @chart)
       ticket.section.should eq @section
       ticket.price.should eq 3099
+      ticket.sold_price.should eq 3099
       ticket.buyer.should eq @person
       ticket.show.should eq @show
     end

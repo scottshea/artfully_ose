@@ -12,6 +12,10 @@ module ArtfullyOseHelper
         "&#x2713;".html_safe
     end
   end
+
+  def build_order_location(order)
+    order.location
+  end
   
   def channel_checkbox(channel)
     channel.to_s.eql?("storefront") ? "Storefront & Widgets" : channel.to_s.humanize

@@ -103,11 +103,11 @@ class Organization < ActiveRecord::Base
   end
 
   def donations
-    Item.joins(:order).where(:product_type => "Donation", :orders => { :organization_id => id })
+    Item.includes(:order => [:person => :address]).where(:product_type => "Donation", :orders => { :organization_id => id })
   end
 
   def ticket_sales
-    Item.joins(:order).where(:product_type => "Ticket", :orders => { :organization_id => id })
+    Item.includes(:show, :order => [:person => :address]).where(:product_type => "Ticket", :orders => { :organization_id => id })
   end
 
   def has_kit?(name)

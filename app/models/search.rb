@@ -4,6 +4,11 @@ class Search < ActiveRecord::Base
   belongs_to :event
   validates_presence_of :organization_id
 
+attr_accessible :zip, :state, :event_id, :tagging,
+                :min_lifetime_value, :max_lifetime_value,
+                :min_donations_amount, :max_donations_amount,
+                :min_donations_date, :max_donations_date, :discount_code
+
   def length
     people.length
   end

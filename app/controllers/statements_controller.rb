@@ -15,7 +15,7 @@ class StatementsController < ArtfullyOseController
   end
 
   def show
-    @show = Show.includes(:event => :venue, :items => [:order, :discount, :product => :section]).find(params[:id])
+    @show = ::Show.includes(:event => :venue, :items => [:order, :discount, :product => :section]).find(params[:id])
     authorize! :view, @show
     @event = @show.event
     @shows = @event.shows.includes(:event => :venue)

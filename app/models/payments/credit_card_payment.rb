@@ -122,8 +122,8 @@ class CreditCardPayment < ::Payment
       attrs[:response]       = response
       @gateway_transaction = GatewayTransaction.create(attrs)
     rescue Exception => e
-      Exceptional.context(:gateway_transaction => @gateway_transaction)
-      Exceptional.handle(e, "Failed to persist Gateway Transaction")
+      ::Exceptional.context(:gateway_transaction => @gateway_transaction)
+      ::Exceptional.handle(e, "Failed to persist Gateway Transaction")
     end
   end
 end

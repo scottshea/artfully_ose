@@ -1,3 +1,6 @@
+#
+# This needs to be refactored to be less database intensive
+#
 module Ticket::Reports
   class Base
     def initialize(parent)

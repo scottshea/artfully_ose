@@ -9,12 +9,11 @@
 #
 # The downside is that this approach requires a bit of hoop jumping in Row (see if, elsif, else block)
 # which is indeed ugly.
-# 
-# Ticket sometimes feels more natrual, and I often considering refactoring this.  But in the end the db queries are too high
-# and Item is easier and more flexible to use.
 #
 ###
 class Statement  
+  include Ext::Due
+
   attr_accessor :datetime, 
                 :tickets_sold, 
                 :tickets_comped, 
@@ -35,6 +34,8 @@ class Statement
     end
     
     new.tap do |statement|
+
+      # Some of this overlaps with Ticket::Glance.  Consider refactoring to combine the two.
       statement.datetime          = show.datetime_local_to_event
       statement.tickets_sold      = show.tickets.select{|t| t.sold?}.size
       statement.tickets_comped    = show.tickets.select{|t| t.comped?}.size
@@ -43,25 +44,12 @@ class Statement
       statement.net_revenue       = show.items.inject(0) { |net, item| net += item.net }
       statement.processing        = statement.gross_revenue - statement.net_revenue
       
-      #
-      # This is the business rule definition of money due to a producer.  
-      # It's important not to use show.settlebles here because *this is the check that show.settlables works*. 
-      # If show.settleables is broken, this will show that
-      #
-      # Also settleables goes down when settlements are issued.  This doesn't
-      #
-      
-      statement.cc_net = 0
-      show.items.includes(:order).each do |item|
-        statement.cc_net += item.net if (item.order.credit? && !imported)
-      end
-      statement.settled           = show.settlements.successful.inject(0) { |settled, settlement| settled += settlement.net }
-      payment_method_hash         = show.items.group_by { |item| item.order.payment_method }
-      
+      statement.calculate_due(show, imported)
+
       #
       # PAYMENT METHOD
       #
-
+      payment_method_hash         = show.items.group_by { |item| item.order.payment_method }
       statement.payment_method_rows         = {}
       
       # Initialize with the three common payment types

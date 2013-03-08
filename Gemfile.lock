@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    artfully_ose (1.1.0.rc1)
+    artfully_ose (1.0.0.rc4)
       active_model_serializers (= 0.6.0)
       activemerchant
       activerecord-import (= 0.2.9)
@@ -39,7 +39,7 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    ZenTest (4.9.0)
+    ZenTest (4.7.0)
     actionmailer (3.2.12)
       actionpack (= 3.2.12)
       mail (~> 2.4.4)
