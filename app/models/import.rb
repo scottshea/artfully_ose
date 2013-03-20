@@ -43,6 +43,7 @@ class Import < ActiveRecord::Base
       self.cache_data
     elsif status == "approved"
       self.import
+      Sunspot.delay.commit
     end
   end
 
@@ -152,7 +153,7 @@ class Import < ActiveRecord::Base
         person.phones << Phone.new(kind: kind, number: number)
       end
     end
-
+    person.skip_commit = true
     person
   end
 

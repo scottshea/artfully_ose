@@ -67,8 +67,6 @@ class Contribution
       @item   = build_item(@order, @amount, @nongift_amount)
       @item.save!
       
-      puts @item.inspect
-
       @action = build_action
       @action.save!
     end

@@ -84,6 +84,7 @@ describe DonationsImport do
       action.import.should eq @import
       action.subtype.should eq @parsed_row.donation_type
       action.details.should_not be_nil
+      action.details.should eq "Donated $50.00"
       action.creator.should_not be_nil
     end
     

@@ -21,7 +21,7 @@ class DailyDonationReport
     ["Order ID", "Total", "Customer"]
   end
 
-  def to_a
+  def to_table
     [header] + @rows.collect {|row| row.to_a.flatten(1)} << footer
   end
 

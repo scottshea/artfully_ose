@@ -107,7 +107,7 @@ class Statement
     self.discount_rows         = {}
     items.each do |item|
       unless item.discount.nil?
-        row = self.discount_rows[item.discount.code] || DiscountRow.new(item.discount.code, item.discount.promotion_type)
+        row = self.discount_rows[item.discount.code] || DiscountRow.new(item.discount.code, item.discount.to_s)
         row << item
         row.discount += (item.original_price - item.price)
         self.discount_rows[item.discount.code] = row

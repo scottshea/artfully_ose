@@ -92,6 +92,7 @@ class DonationsImport < Import
     contribution.save(ImportedOrder) do |contribution|
       contribution.order.import_id  = self.id
       contribution.order.save
+      contribution.order.reload
       contribution.action.import_id = self.id 
       contribution.action.creator = self.user
       contribution.action.details = "Donated #{number_as_cents contribution.order.total}"

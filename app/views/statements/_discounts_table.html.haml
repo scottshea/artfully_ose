@@ -15,7 +15,7 @@
     - statement.discount_rows.each do |discount_code, row|
       %tr
         %td=discount_code
-        %td $10 OFF
+        %td=row.type
         %td.right=row.tickets
         %td.right 
           %strong=number_as_cents row.discount
@@ -23,4 +23,4 @@
         %td.right
     %tr
       %td.right{:colspan => 6}
-        = icon_link_to "Slices", statement_slices_path(@show.id, 'slice[]' => 'order_location_proc'), 'icon-chevron-right', 'btn', ''
+        = icon_link_to "Slices", statement_slices_path(@show.id, 'slice[]' => 'discount_code_proc'), 'icon-chevron-right', 'btn', ''

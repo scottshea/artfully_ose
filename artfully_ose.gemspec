@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.summary     = "A Ruby on Rails engine for running ticketing, CRM, and order management"
   s.description = "A Ruby on Rails engine for running ticketing, CRM, and order management.  See http://fracturedatlas.github.com/artfully_app/ for the reference implementation"
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["LICENSE.txt", "Rakefile"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", ">= 3.2.12"

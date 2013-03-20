@@ -35,7 +35,7 @@ class Store::OrdersController < Store::StoreController
         params[:discount] = nil
         @discount_amount = 0
       rescue NoMethodError => e
-        discount_error = "We're sorry, we could not find your discount."
+        discount_error = "We could not find your discount. Please try again."
         params[:discount] = nil
         @discount_amount = 0
       end

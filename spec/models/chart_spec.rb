@@ -20,6 +20,13 @@ describe Chart do
     end
   end
 
+  describe "updating a chart" do
+    it "should allow for a totally blank chart to be submitted" do
+      params_hash = nil
+      subject.update_attributes_from_params(params_hash)
+    end
+  end
+
   describe "upgrading the event" do
     it "should update the event from free to paid if a paid section has been added to a free event" do
       @chart = FactoryGirl.build(:chart)

@@ -9,7 +9,7 @@ class DailyTicketReport
 
     @rows = []
     @orders.each do |order|
-      @rows << Row.new(order)
+      @rows << Row.new(order) unless order.tickets.empty?
     end
   end
 
@@ -25,7 +25,7 @@ class DailyTicketReport
     ["Order ID", "Total", "Customer", "Details", "Special Instructions"]
   end
 
-  def to_a
+  def to_table
     [header] + @rows.collect {|row| row.to_a.flatten(1)} << footer
   end
 

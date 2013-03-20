@@ -33,7 +33,7 @@ class ShowsController < ArtfullyOseController
     ActiveRecord::Base.transaction do
       chart_params = params[:show].delete(:chart) 
       if(chart_params.nil? || chart_params.empty?)
-        flash[:error] = "Please specify at least one price level for your show."
+        flash[:error] = "Please specify at least one ticket type for your show."
         render :new and return
       end
       

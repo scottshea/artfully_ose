@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130301144159) do
+ActiveRecord::Schema.define(:version => 20130312173340) do
 
   create_table "actions", :force => true do |t|
     t.integer  "organization_id"
@@ -146,6 +146,8 @@ ActiveRecord::Schema.define(:version => 20130301144159) do
     t.boolean  "show_special_instructions",    :default => false
     t.integer  "import_id"
     t.string   "uuid"
+    t.string   "primary_category"
+    t.text     "secondary_categories"
   end
 
   add_index "events", ["uuid"], :name => "index_events_on_uuid"
@@ -290,10 +292,11 @@ ActiveRecord::Schema.define(:version => 20130301144159) do
     t.string   "linked_in_url"
     t.integer  "import_id"
     t.datetime "deleted_at"
-    t.integer  "lifetime_value",  :default => 0
+    t.integer  "lifetime_value",   :default => 0
     t.string   "salutation"
-    t.boolean  "do_not_email",    :default => false
+    t.boolean  "do_not_email",     :default => false
     t.string   "title"
+    t.text     "subscribed_lists"
   end
 
   add_index "people", ["organization_id", "email"], :name => "index_people_on_organization_id_and_email"

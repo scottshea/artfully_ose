@@ -9,6 +9,7 @@ class SegmentsController < ArtfullyOseController
   def show
     @segment = Segment.find(params[:id])
     authorize! :view, @segment
+    @people = @segment.people.paginate(:page => params[:page], :per_page => 20)
     respond_to do |format|
      format.html
      format.csv { render :csv => @segment.people, :filename => "#{@segment.name}-#{DateTime.now.strftime("%m-%d-%y")}" }

@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'spork'
 require 'fakeweb'
+require 'json_spec'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 
@@ -24,6 +25,7 @@ Spork.prefork do
 
   RSpec.configure do |config|
     config.include FactoryGirl::Syntax::Methods
+    config.include JsonSpec::Helpers
 
     config.mock_with :rspec
 
@@ -32,7 +34,7 @@ Spork.prefork do
     config.before(:each) { FakeWeb.clean_registry }
     config.before(:each) { FakeWeb.last_request = nil }
     config.before(:all) { FakeWeb.allow_net_connect = false }
-  
+
     # Set some dummy S3 values.
     config.before(:all) do
       ENV["S3_BUCKET"] = "rspec"

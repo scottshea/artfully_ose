@@ -13,3 +13,7 @@ ul {
 .modal {
   display: none;
 }
+
+#preload_assets {
+  display: none;
+}

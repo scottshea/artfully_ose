@@ -53,8 +53,10 @@ class Chart < ActiveRecord::Base
     # HACK: The move to bootstrap left us with currency submission in the form os "DD.CC" which 
     # Artfully interpreted as DD.00.  
     # This hack converts DD.CC to DDCC
-    #   
-    params_hash[:sections_attributes].each do |index, section_hash|
+    #  
+    params_hash ||= {}
+
+    params_hash.fetch(:sections_attributes, []).each do |index, section_hash|
       new_price = Section.price_to_cents(section_hash['price'])
       section_hash['price'] = new_price
     end

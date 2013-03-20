@@ -22,7 +22,9 @@ group :test, :development do
   gem 'factory_girl', '~> 4.0'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'mysql2'
-  
+end
+
+group :test do
   gem 'autotest-rails'
   gem 'autotest-fsevent'
   gem 'autotest-growl'
@@ -36,6 +38,7 @@ group :test, :development do
   gem 'awesome_print', :require => 'ap'
   gem 'wirble'
   gem 'letter_opener'
+  gem 'json_spec'
 end
 
 group :pg do
