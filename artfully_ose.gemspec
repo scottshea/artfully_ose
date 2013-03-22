@@ -1,3 +1,6 @@
+#!/usr/bin/env gem build
+# encoding: utf-8
+
 $:.push File.expand_path("../lib", __FILE__)
 
 require "artfully_ose/version"
