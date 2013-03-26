@@ -72,8 +72,14 @@ Rails.application.routes.draw do
     resources :phones, :only => [:create, :destroy]
     resource  :address, :only => [:create, :update, :destroy]
   end
-  resources :searches, only: [:new, :create, :show]
+  resources :searches, :only => [:new, :create, :show] do
+    resources :actions, :only => [:new, :create]
+    member do
+      post :tag
+    end
+  end
   resources :segments, :only => [:index, :show, :create, :destroy] do
+    resources :actions, :only => [:new, :create]
     member do
       post :tag
     end

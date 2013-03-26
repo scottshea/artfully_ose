@@ -6,6 +6,10 @@ FactoryGirl.define do
     organization
     payment_method ::CashPayment.payment_method
   end
+
+  factory :imported_order, :parent => :order do
+    import_id 1
+  end
   
   factory :comp_order, :parent => :order, :class => CompOrder do
     transaction_id nil

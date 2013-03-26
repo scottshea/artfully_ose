@@ -98,7 +98,15 @@ GEM
     autotest-rails (4.1.2)
       ZenTest (~> 4.5)
     awesome_print (1.0.2)
+<<<<<<< HEAD
     aws-sdk (1.8.5)
+=======
+<<<<<<< HEAD
+    aws-sdk (1.8.2)
+=======
+    aws-sdk (1.8.5)
+>>>>>>> 3b8a6a4... Add indexes to notes
+>>>>>>> master
       json (~> 1.4)
       nokogiri (>= 1.4.4)
       uuidtools (~> 2.1)
@@ -122,6 +130,7 @@ GEM
       activesupport (>= 3.0)
     cocaine (0.5.1)
       climate_control (>= 0.0.3, < 1.0)
+    coderay (1.0.9)
     comma (3.0.3)
     configuration (1.2.0)
     cucumber (1.1.4)
@@ -176,10 +185,13 @@ GEM
       json (> 1.4.0)
       rdoc
     gravatar_image_tag (1.1.3)
-    guard (1.2.3)
-      listen (>= 0.4.2)
+    guard (1.6.2)
+      listen (>= 0.6.0)
+      lumberjack (>= 1.0.2)
+      pry (>= 0.9.10)
+      terminal-table (>= 1.4.3)
       thor (>= 0.14.6)
-    guard-rspec (1.1.0)
+    guard-rspec (1.2.1)
       guard (>= 1.1)
     haml (3.1.8)
     hike (1.2.1)
@@ -200,16 +212,15 @@ GEM
     libv8 (3.3.10.4)
     libwebsocket (0.1.3)
       addressable
-    listen (0.4.7)
-      rb-fchange (~> 0.0.5)
-      rb-fsevent (~> 0.9.1)
-      rb-inotify (~> 0.8.8)
+    listen (0.7.3)
+    lumberjack (1.0.3)
     macaddr (1.6.1)
       systemu (~> 2.5.0)
     mail (2.4.4)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    method_source (0.8.1)
     mime-types (1.21)
     money (5.1.1)
       i18n (~> 0.6.0)
@@ -228,6 +239,10 @@ GEM
     polyglot (0.3.3)
     pr_geohash (1.0.0)
     proxies (0.2.1)
+    pry (0.9.12)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -251,11 +266,7 @@ GEM
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
     rake (10.0.3)
-    rb-fchange (0.0.5)
-      ffi
-    rb-fsevent (0.9.1)
-    rb-inotify (0.8.8)
-      ffi (>= 0.5.0)
+    rb-fsevent (0.9.3)
     rdoc (3.12.2)
       json (~> 1.4)
     rsolr (1.0.8)
@@ -284,6 +295,7 @@ GEM
     set_watch_for (0.0.1)
     shoulda (2.11.3)
     slicer (0.0.2)
+    slop (3.4.4)
     spork (1.0.0rc3)
     spork-rails (3.2.0)
       rails (>= 3.0.0, < 3.3.0)
@@ -306,6 +318,7 @@ GEM
       ffi (>= 1.0.0)
     systemu (2.5.2)
     term-ansicolor (1.0.7)
+    terminal-table (1.4.5)
     text-table (1.2.2)
     therubyracer (0.10.1)
       libv8 (~> 3.3.10)
@@ -354,6 +367,7 @@ DEPENDENCIES
   mysql2
   nokogiri
   pg
+  rb-fsevent (~> 0.9)
   rspec-rails (~> 2.10.0)
   shoulda
   spork-rails

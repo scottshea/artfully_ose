@@ -4,9 +4,22 @@ describe DailyDonationReport do
   disconnect_sunspot
   let(:org) { FactoryGirl.create(:organization) }
   let(:order) { FactoryGirl.create(:order, organization: org, created_at: 1.day.ago)}
+  let(:imported_order) { FactoryGirl.create(:imported_order, organization: org, created_at: 1.day.ago)}
   let(:donation) { FactoryGirl.create(:donation, organization: org, amount: 1000)}
+  let(:donation_2) { FactoryGirl.create(:donation, organization: org, amount: 2000)}
   let(:ticket) { FactoryGirl.create(:ticket, organization: org)}
   let(:report) { DailyDonationReport.new(org) }
+
+  describe "#rows" do
+    subject { report.rows }
+    before(:each) do
+      order << donation
+      imported_order << donation_2
+    end
+    it "should not have imported rows from orders" do
+      subject.length.should == 1
+    end
+  end
 
   describe "#total" do
     subject { report.total }

@@ -1,7 +1,7 @@
 .modal-header
   %h3 Hear Action
 
-= form_for @action, :url => person_actions_path, :as => :artfully_action do |form|
+= form_for @action, :url => self.send(@form_action), :as => :artfully_action do |form|
   .modal-body
     = hidden_field_tag "action_type", params[:type]
     = form.label :subtype, "Action Type"

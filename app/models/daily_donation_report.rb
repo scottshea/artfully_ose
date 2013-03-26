@@ -5,7 +5,7 @@ class DailyDonationReport
   def initialize(organization, date=nil)
     @organization = organization
     @date = date || 1.day.ago.to_date
-    @orders = organization.orders.after(@date).before(@date + 1.day) || []
+    @orders = organization.orders.csv_not_imported.after(@date).before(@date + 1.day) || []
 
     @rows = []
     @orders.each do |order|

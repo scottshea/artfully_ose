@@ -40,6 +40,8 @@ class Order < ActiveRecord::Base
   scope :after,  lambda { |time| where("orders.created_at > ?", time) }
   scope :imported, where("fa_id IS NOT NULL")
   scope :not_imported, where("fa_id IS NULL")
+  scope :csv_imported, where("import_id IS NOT NULL")
+  scope :csv_not_imported, where("import_id IS NULL")
   scope :artfully, where("transaction_id IS NOT NULL")
 
   searchable do

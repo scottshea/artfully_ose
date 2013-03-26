@@ -78,4 +78,26 @@ class Action < ActiveRecord::Base
   def give_action_subtypes
     GIVE_TYPES
   end
+
+  #
+  # This exists solely so that DJ can serialize an unsaved action so that ActionJob can run
+  # There's nothing inherent to Action in this method so it looks like a good candidate to 
+  # move into a Module.  But, I'm not thrilled with it and don't want it used willy-nilly
+  # Perhaps in an DelayedJob::Unsaved::Serializable Module or something. 
+  #
+  def to_open_struct
+    action_struct = OpenStruct.new
+    self.class.column_names.each do |col|
+      action_struct.send("#{col}=", self.send(col))
+    end
+    action_struct
+  end
+
+  def self.from_open_struct(action_struct)
+    action = Kernel.const_get(action_struct.type).new
+    Kernel.const_get(action_struct.type).column_names.each do |col|
+      action.send("#{col}=", action_struct.send(col)) unless action_struct.send(col).nil?
+    end
+    action    
+  end
 end

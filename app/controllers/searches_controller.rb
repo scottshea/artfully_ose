@@ -29,6 +29,14 @@ class SearchesController < ApplicationController
    end
   end
 
+  def tag
+    @search = Search.find(params[:id])
+    authorize! :tag, Segment
+    @search.tag(params[:name])
+    flash[:notice] = "We're tagging all the people and we'll be done shortly.  Refresh this page in a minute or two."
+    redirect_to @search
+  end
+
   private
 
     def prepare_search_and_people

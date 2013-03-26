@@ -24,13 +24,13 @@ module Ticket::Reports
 
   class Available < Base
     def total
-      tickets.on_sale.count
+      tickets.select(&:on_sale?).length
     end
   end
 
   class Sold < Base
     def total
-      tickets.sold.count
+      tickets.select(&:sold?).length
     end
 
     def today
@@ -44,7 +44,7 @@ module Ticket::Reports
 
   class Comped < Base
     def total
-      tickets.comped.count
+      tickets.select(&:comped?).length
     end
 
     def today

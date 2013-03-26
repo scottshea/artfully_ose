@@ -17,6 +17,14 @@ attr_accessible :zip, :state, :event_id, :tagging,
     @people ||= find_people
   end
 
+  def tag(tag)
+    Delayed::Job.enqueue(TagJob.new(tag, people))
+  end
+
+  def attach_action(action)
+    Delayed::Job.enqueue(ActionJob.new(action, people))
+  end
+
   def description
     conditions = []
     conditions << "Are tagged with #{tagging}." if tagging.present?

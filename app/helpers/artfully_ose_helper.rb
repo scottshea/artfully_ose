@@ -74,7 +74,7 @@ module ArtfullyOseHelper
   
   #This is for the widget generator, DO NOT use anywhere else
   def fully_qualified_asset_path(asset)
-    "#{request.protocol}#{request.host_with_port}#{asset_path(asset, :digest => false)}"
+    "#{asset_path(asset, :digest => false)}"
   end
   
   def events_to_options(selected_event_id = nil)

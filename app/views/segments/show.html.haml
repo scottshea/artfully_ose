@@ -18,6 +18,8 @@
           %li
             =link_to "Tag all", "#tag-modal", 'data-toggle' => 'modal', :rel => "tooltip", :data => {:toggle => "modal", "original-title" => "Give all of the people in this list segment the same tag.", :trigger => "hover", :placement => "right"}
           %li
+            =link_to "Log action", new_segment_action_path(@segment, :format => :html, :type => :hear), :id => 'hear-action-link', "data-remote" => "true"
+          %li
             = link_to "Delete this list segment", @segment, :method => :delete, :data => {:confirm => "Are you sure you want to delete #{@segment.name}?"}
           %li
             = link_to 'Export all to CSV', segment_path(@segment, :format => :csv), :class => "artfully-tooltip", :rel => "tooltip", :data => {"original-title" => "To view all the data on patrons in this segment, including mailing address and phone numbers, export this segment to a CSV file.", :trigger => "hover", :placement => "right"}
@@ -48,3 +50,5 @@
     %p This tag will be applied to people that are currently in this list segment. Any future additions/deletions to this list will not be automatically tagged.
   .modal-footer
     = submit_tag "Save", :class => "btn"
+
+#hear-action-modal.modal
