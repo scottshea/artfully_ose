@@ -98,15 +98,7 @@ GEM
     autotest-rails (4.1.2)
       ZenTest (~> 4.5)
     awesome_print (1.0.2)
-<<<<<<< HEAD
     aws-sdk (1.8.5)
-=======
-<<<<<<< HEAD
-    aws-sdk (1.8.2)
-=======
-    aws-sdk (1.8.5)
->>>>>>> 3b8a6a4... Add indexes to notes
->>>>>>> master
       json (~> 1.4)
       nokogiri (>= 1.4.4)
       uuidtools (~> 2.1)
