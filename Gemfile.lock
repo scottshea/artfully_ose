@@ -347,6 +347,7 @@ DEPENDENCIES
   capybara
   cucumber-rails
   database_cleaner
+  exceptional
   factory_girl (~> 4.0)
   factory_girl_rails (~> 4.0)
   faker

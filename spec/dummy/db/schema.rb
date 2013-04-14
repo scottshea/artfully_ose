@@ -27,8 +27,8 @@ ActiveRecord::Schema.define(:version => 20130329201707) do
     t.integer  "subject_id"
     t.string   "subject_type"
     t.integer  "creator_id"
-    t.datetime "deleted_at"
     t.integer  "import_id"
+    t.datetime "deleted_at"
   end
 
   add_index "actions", ["creator_id"], :name => "index_actions_on_creator_id"
@@ -271,8 +271,8 @@ ActiveRecord::Schema.define(:version => 20130329201707) do
     t.string   "type"
     t.string   "payment_method"
     t.text     "special_instructions"
-    t.datetime "deleted_at"
     t.integer  "import_id"
+    t.datetime "deleted_at"
   end
 
   add_index "orders", ["created_at"], :name => "index_orders_on_created_at"
