@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130312173340) do
+ActiveRecord::Schema.define(:version => 20130329201707) do
 
   create_table "actions", :force => true do |t|
     t.integer  "organization_id"
@@ -30,6 +30,12 @@ ActiveRecord::Schema.define(:version => 20130312173340) do
     t.datetime "deleted_at"
     t.integer  "import_id"
   end
+
+  add_index "actions", ["creator_id"], :name => "index_actions_on_creator_id"
+  add_index "actions", ["import_id"], :name => "index_actions_on_import_id"
+  add_index "actions", ["organization_id", "person_id"], :name => "index_actions_on_organization_id_and_person_id"
+  add_index "actions", ["organization_id"], :name => "index_actions_on_organization_id"
+  add_index "actions", ["person_id"], :name => "index_actions_on_person_id"
 
   create_table "addresses", :force => true do |t|
     t.string   "address1"
@@ -163,6 +169,8 @@ ActiveRecord::Schema.define(:version => 20130312173340) do
     t.datetime "updated_at",     :null => false
   end
 
+  add_index "gateway_transactions", ["transaction_id"], :name => "index_gateway_transactions_on_transaction_id"
+
   create_table "import_errors", :force => true do |t|
     t.integer  "import_id"
     t.text     "row_data"
@@ -175,6 +183,8 @@ ActiveRecord::Schema.define(:version => 20130312173340) do
     t.integer "import_id"
     t.text    "content"
   end
+
+  add_index "import_rows", ["import_id"], :name => "index_import_rows_on_import_id"
 
   create_table "imports", :force => true do |t|
     t.integer  "user_id"
@@ -224,6 +234,7 @@ ActiveRecord::Schema.define(:version => 20130312173340) do
     t.integer  "organization_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "settings"
   end
 
   create_table "memberships", :force => true do |t|
@@ -241,6 +252,11 @@ ActiveRecord::Schema.define(:version => 20130312173340) do
     t.datetime "occurred_at"
     t.integer  "organization_id"
   end
+
+  add_index "notes", ["organization_id"], :name => "index_notes_on_organization_id"
+  add_index "notes", ["person_id", "organization_id"], :name => "index_notes_on_person_id_and_organization_id"
+  add_index "notes", ["person_id"], :name => "index_notes_on_person_id"
+  add_index "notes", ["user_id"], :name => "index_notes_on_user_id"
 
   create_table "orders", :force => true do |t|
     t.string   "transaction_id"
@@ -260,6 +276,7 @@ ActiveRecord::Schema.define(:version => 20130312173340) do
   end
 
   add_index "orders", ["created_at"], :name => "index_orders_on_created_at"
+  add_index "orders", ["transaction_id"], :name => "index_orders_on_transaction_id"
 
   create_table "organizations", :force => true do |t|
     t.string   "name"
@@ -283,7 +300,7 @@ ActiveRecord::Schema.define(:version => 20130312173340) do
     t.string   "last_name"
     t.string   "company_name"
     t.string   "website"
-    t.boolean  "dummy"
+    t.boolean  "dummy",              :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "person_type"
@@ -292,11 +309,12 @@ ActiveRecord::Schema.define(:version => 20130312173340) do
     t.string   "linked_in_url"
     t.integer  "import_id"
     t.datetime "deleted_at"
-    t.integer  "lifetime_value",   :default => 0
+    t.integer  "lifetime_value",     :default => 0
     t.string   "salutation"
-    t.boolean  "do_not_email",     :default => false
+    t.boolean  "do_not_email",       :default => false
     t.string   "title"
     t.text     "subscribed_lists"
+    t.integer  "lifetime_donations", :default => 0
   end
 
   add_index "people", ["organization_id", "email"], :name => "index_people_on_organization_id_and_email"
