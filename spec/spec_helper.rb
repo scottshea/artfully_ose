@@ -2,6 +2,7 @@ require 'rubygems'
 require 'spork'
 require 'fakeweb'
 require 'json_spec'
+require 'Exceptional'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 

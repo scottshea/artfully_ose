@@ -22,6 +22,7 @@ group :test, :development do
   gem 'factory_girl', '~> 4.0'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'mysql2'
+  gem 'exceptional'
 end
 
 group :test do

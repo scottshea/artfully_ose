@@ -2,6 +2,7 @@ class GatewayTransaction < ActiveRecord::Base
   include AdminTimeZone
 
   extend ::ArtfullyOseHelper
+  attr_accessible :transaction_id, :success, :service_fee, :amount, :message, :response
   has_one :order, :primary_key => :transaction_id, :foreign_key => :transaction_id
   has_many :items, :through => :order
   serialize :response
