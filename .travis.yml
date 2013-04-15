@@ -1,1 +1,3 @@
+before_script:
+  - "bundle exec rake db:test:prepare"
 script: "bundle exec rspec spec/*"
