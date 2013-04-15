@@ -36,9 +36,10 @@ class ProducerMailer < ActionMailer::Base
     mail :to => @producer.email, :subject => "Artful.ly: Ticket Offer Rejected"
   end
 
-  def mailchimp_kit_initial_sync_notification(kit, producer, list_name)
+  def mailchimp_kit_initial_sync_notification(kit, producer, added_list_names, removed_list_names)
     @kit = kit
-    @list_name = list_name
+    @added_list_names = added_list_names
+    @removed_list_names = removed_list_names
     @organization = kit.organization
 
     mail :to => producer.email, :subject => "Artful.ly: MailChimp kit synced"
