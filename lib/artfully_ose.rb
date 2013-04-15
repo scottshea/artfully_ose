@@ -1,5 +1,6 @@
 require "artfully_ose/engine"
 require "artfully_ose/common_abilities"
+require "artfully_ose/core_ext"
 require "transitions"
 require "active_record/transitions"
 require "devise"
