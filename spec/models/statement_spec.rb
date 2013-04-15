@@ -37,12 +37,7 @@ describe Statement do
       @statement.gross_revenue.should eq 0
       @statement.processing.should be_within(0.00001).of(0)
       @statement.net_revenue.should eq 0
-      
-      @statement.cc_net.should eq 0
-      @statement.settled.should eq 0
-      
       @statement.payment_method_rows.length.should eq 3 
-
       @statement.discount_rows.length.should eq 0     
     end    
   end
@@ -51,10 +46,6 @@ describe Statement do
     before(:each) do
       setup_discounts
       setup_show
-      Settlement.new.tap do |settlement|
-        settlement.net = 1000
-        settlement.show = paid_show
-      end.save
       @statement = Statement.for_show(paid_show)
     end
       
@@ -66,9 +57,6 @@ describe Statement do
       @statement.gross_revenue.should eq 2500
       @statement.processing.should be_within(0.00001).of((2500 * 0.035).round)
       @statement.net_revenue.should eq (@statement.gross_revenue - @statement.processing)
-      
-      @statement.cc_net.should eq 2412
-      @statement.settled.should eq 0
       
       @statement.payment_method_rows.length.should eq 3
       
@@ -108,19 +96,6 @@ describe Statement do
     end
   end
   
-  describe "with an imported show" do      
-    before(:each) do
-      setup_show
-      setup_exchange
-    end
-      
-    it "should not show a cc_net for imported events" do
-      paid_show.event.stub(:imported?).and_return(true)
-      @statement = Statement.for_show(paid_show, true)
-      @statement.cc_net.should eq 0
-    end  
-  end
-  
   describe "with an exchange" do      
     before(:each) do
       setup_show
@@ -136,8 +111,6 @@ describe Statement do
       @statement.gross_revenue.should eq 4000
       @statement.processing.should be_within(0.00001).of(4000 * 0.035)
       @statement.net_revenue.should eq (@statement.gross_revenue - @statement.processing)
-      
-      @statement.cc_net.should eq 3860
       
       @statement.payment_method_rows.length.should eq 3
       
@@ -166,9 +139,7 @@ describe Statement do
       @statement.gross_revenue.should eq 2000
       @statement.processing.should be_within(0.00001).of(2000 * 0.035)
       @statement.net_revenue.should eq (@statement.gross_revenue - @statement.processing)
-      
-      @statement.cc_net.should eq 1930
-      
+    
       @statement.payment_method_rows.length.should eq 3
       
       @statement.payment_method_rows[::CreditCardPayment.payment_method.downcase].should_not be_nil

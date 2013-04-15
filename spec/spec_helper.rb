@@ -3,6 +3,7 @@ require 'spork'
 require 'fakeweb'
 require 'json_spec'
 require 'exceptional'
+require 'timecop'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 
