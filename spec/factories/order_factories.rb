@@ -18,7 +18,7 @@ FactoryGirl.define do
     payment_method ::CompPayment.payment_method
   end
   
-  factory :credit_card_order, :parent => :order do
+  factory :credit_card_order, :parent => :order, :class => WebOrder do
     transaction_id "j59qrb"
     price 50
     person
