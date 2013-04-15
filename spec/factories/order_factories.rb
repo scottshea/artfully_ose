@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :order do
+  factory :order, :class => Order do
     transaction_id "j59qrb"
     price 50
     person

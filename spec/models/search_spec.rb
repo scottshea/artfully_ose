@@ -80,13 +80,9 @@ describe Search do
       FactoryGirl.create(:order, created_at: 2.months.from_now, person: person1) << FactoryGirl.create(:donation)
       FactoryGirl.create(:order, created_at: Time.now,          person: person2) << FactoryGirl.create(:donation, amount: 2500)
     end
-    specify "#people should return the people that match" do
+    specify "#people should return the people that match and include relevant text" do
       search.people.should include person1
-    end
-    specify "#people should not return the people that don't match" do
       search.people.should_not include person2
-    end
-    specify "#description should include relevant text" do
       search.description.should match /Made between \$5 and \$15 in donations from #{1.month.ago.strftime('%D')} to #{1.month.from_now.strftime('%D')}/
     end
   end
