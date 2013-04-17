@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130329201707) do
+ActiveRecord::Schema.define(:version => 20130415193118) do
 
   create_table "actions", :force => true do |t|
     t.integer  "organization_id"
@@ -207,7 +207,7 @@ ActiveRecord::Schema.define(:version => 20130329201707) do
     t.integer  "realized_price"
     t.integer  "net"
     t.string   "fs_project_id"
-    t.integer  "nongift_amount"
+    t.integer  "nongift_amount",  :default => 0
     t.boolean  "is_noncash"
     t.boolean  "is_stock"
     t.boolean  "is_anonymous"
@@ -310,8 +310,8 @@ ActiveRecord::Schema.define(:version => 20130329201707) do
     t.integer  "import_id"
     t.datetime "deleted_at"
     t.integer  "lifetime_value",     :default => 0
-    t.string   "salutation"
     t.boolean  "do_not_email",       :default => false
+    t.string   "salutation"
     t.string   "title"
     t.text     "subscribed_lists"
     t.integer  "lifetime_donations", :default => 0
