@@ -19,18 +19,14 @@ class DonationsImport < Import
   end
   
   def validate_amounts(parsed_row)
-    if !parsed_row.unparsed_nongift_amount.blank? && parsed_row.nongift_amount > parsed_row.amount
-      raise Import::RowError, "Non-deductible amount (#{parsed_row.unparsed_nongift_amount}) cannot be more than the total doantion amount (#{parsed_row.unparsed_amount})': #{parsed_row.row}"
-    end
+    raise_amount_error('Non-deductible amount',parsed_row.unparsed_nongift_amount,parsed_row) if !parsed_row.unparsed_nongift_amount.blank? && parsed_row.nongift_amount > parsed_row.amount
 
-    if !parsed_row.unparsed_deductible_amount.blank? && parsed_row.deductible_amount > parsed_row.amount
-      raise Import::RowError, "Deductible amount (#{parsed_row.unparsed_deductible_amount}) cannot be more than the total doantion amount (#{parsed_row.unparsed_amount})': #{parsed_row.row}"
-    end    
+    raise_amount_error('Deductible',parsed_row.unparsed_deductible_amount,parsed_row) if !parsed_row.unparsed_deductible_amount.blank? && parsed_row.deductible_amount > parsed_row.amount
     
     if !parsed_row.unparsed_deductible_amount.blank? &&
        !parsed_row.unparsed_nongift_amount.blank? &&
        (parsed_row.deductible_amount + parsed_row.nongift_amount != parsed_row.amount)
-      raise Import::RowError, "Deductible amount (#{parsed_row.unparsed_deductible_amount}) + Non-Deductible Amount (#{parsed_row.unparsed_nongift_amount}) does not equal Amount of  in this row: #{parsed_row.row}"
+      raise Import::RowError, "Deductible amount (#{parsed_row.unparsed_deductible_amount}) + Non-Deductible Amount (#{parsed_row.unparsed_nongift_amount}) does not equal amount of donation in this row: #{parsed_row.row}"
     end  
   end
   
@@ -42,7 +38,7 @@ class DonationsImport < Import
     valid_date?   parsed_row.donation_date
     
     [:unparsed_amount, :unparsed_nongift_amount, :unparsed_deductible_amount].each do |amt|
-      valid_amount? parsed_row.send(amt)   unless parsed_row.send(amt).blank?
+      valid_amount? parsed_row.send(amt) unless parsed_row.send(amt).blank?
     end
     
     validate_amounts(parsed_row)
@@ -99,5 +95,11 @@ class DonationsImport < Import
       contribution.action.save
     end
     contribution
+  end
+
+  private
+
+  def raise_amount_error(leading_text,amount,parsed_row)
+    raise Import::RowError, "#{leading_text} amount (#{amount}) cannot be more than the total donation amount (#{parsed_row.unparsed_amount})': #{parsed_row.row}"
   end
 end
