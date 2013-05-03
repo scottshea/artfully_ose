@@ -281,9 +281,9 @@ class Person < ActiveRecord::Base
       mailchimp_kit.attached_lists.each do |list|
         old_lists = previous_changes["subscribed_lists"][0]
         if !old_lists.include?(list[:list_id]) && subscribed_lists.include?(list[:list_id])
-          new_note("#{user.email} changed subscription status of the MailChimp list #{list[:list_name]} to subscribed",Time.now,user,organization.id)
+          mail_subscription_status(user,list,'subscribed')
         elsif old_lists.include?(list[:list_id]) && !subscribed_lists.include?(list[:list_id])
-          new_note("#{user.email} changed subscription status of the MailChimp list #{list[:list_name]} to unsubscribed",Time.now,user,organization.id)
+          mail_subscription_status(user,list,'unsubscribed')
         end
       end
     end
@@ -328,5 +328,9 @@ class Person < ActiveRecord::Base
 
     def check_do_not_email
       self.subscribed_lists = [] if do_not_email
+    end
+
+    def mail_subscription_status(user,list,status)
+      new_note("#{user.email} changed subscription status of the MailChimp list #{list[:list_name]} to #{status}",Time.now,user,organization.id)
     end
 end
