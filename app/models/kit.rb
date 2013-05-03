@@ -28,8 +28,6 @@ class Kit < ActiveRecord::Base
       event(:activate_without_pending) { transitions :from => [:fresh, :pending, :cancelled], :to => :activated }
     end
 
-    
-
     if self.requires_approval
       state_machine do
         event(:submit_for_approval) { transitions :from => :fresh, :to => :pending }
@@ -108,6 +106,12 @@ class Kit < ActiveRecord::Base
 
   def approvable?
     check_approval
+  end
+
+  def exclusive?
+    exclusive = !organization.kits.where(:type => alternatives.collect(&:to_s)).any?
+    errors.add(:requirements, "You have already activated a mutually exclusive kit.") unless exclusive
+    exclusive
   end
 
   class DuplicateError < StandardError

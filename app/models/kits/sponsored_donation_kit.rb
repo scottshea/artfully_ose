@@ -35,12 +35,6 @@ class SponsoredDonationKit < Kit
     organization.connected?
   end
 
-  def exclusive?
-    exclusive = !organization.kits.where(:type => alternatives.collect(&:to_s)).any?
-    errors.add(:requirements, "You have already activated a mutually exclusive kit.") unless exclusive
-    exclusive
-  end
-
   def has_website?
     errors.add(:requirements, "You need to specify a website for your organization.") unless !organization.website.blank?
     !organization.website.blank?

@@ -22,12 +22,6 @@ class RegularDonationKit < Kit
     "Receive donations for a 501(c)(3)"
   end
 
-  def exclusive?
-    exclusive = !organization.kits.where(:type => alternatives.collect(&:to_s)).any?
-    errors.add(:requirements, "You have already activated a mutually exclusive kit.") unless exclusive
-    exclusive
-  end
-
   def no_bank_account?
     errors.add(:requirements, "Your organization needs bank account information first.") if organization.bank_account.nil?
     organization.bank_account.nil?
