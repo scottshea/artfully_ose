@@ -137,13 +137,11 @@ class Show < ActiveRecord::Base
   end
 
   def bulk_on_sale(ids)
-    targets = (ids == :all) ? tickets : tickets.where(:id => ids)
-    Ticket.put_on_sale(targets)
+    Ticket.put_on_sale(get_targets(ids))
   end
 
   def bulk_off_sale(ids)
-    targets = (ids == :all) ? tickets : tickets.where(:id => ids)
-    Ticket.take_off_sale(targets)
+    Ticket.take_off_sale(get_targets(ids))
   end
 
   def bulk_delete(ids)
@@ -226,5 +224,9 @@ class Show < ActiveRecord::Base
 
   def bulk_comp(ids)
     tickets.select { |ticket| ids.include? ticket.id }.collect{ |ticket| ticket.id unless ticket.comp_to }.compact
+  end
+
+  def get_targets(ids)
+    (ids == :all) ? tickets : tickets.where(:id => ids)
   end
 end
